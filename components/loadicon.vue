@@ -1,0 +1,197 @@
+<template>
+	<view :class="[box, size ? size : '']">
+	  <view :class="[lds, size ? size : '']">
+	    <view :style="{background: color}" class="spinner1"></view>
+	    <view :style="{background: color}" class="spinner2"></view>
+	    <view :style="{background: color}" class="spinner3"></view>
+	    <view :style="{background: color}" class="spinner4"></view>
+	    <view :style="{background: color}" class="spinner5"></view>
+	    <view :style="{background: color}" class="spinner6"></view>
+	    <view :style="{background: color}" class="spinner7"></view>
+	    <view :style="{background: color}" class="spinner8"></view>
+	    <view :style="{background: color}" class="spinner9"></view>
+	    <view :style="{background: color}" class="spinner10"></view>
+	    <view :style="{background: color}" class="spinner11"></view>
+	    <view :style="{background: color}" class="spinner12"></view>
+	  </view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			color: {
+			  type: String,
+			  value: '#ffffff'
+			},
+			size: {
+			  type: String,
+			  value: ''
+			}
+		},
+		data() {
+			return {
+				box: 'spinner-box',
+				lds: 'lds-spinner'
+			};
+		}
+	}
+</script>
+
+<style scoped>
+/* components/loadicon/loadicon.wxss */
+
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.lds-spinner {
+  position: absolute;
+  display: inline-block;
+  top: 15rpx;
+  left: 0;
+}
+
+.lds-spinner view {
+  left: 94rpx;
+  top: 48rpx;
+  position: absolute;
+  -webkit-animation: lds-spinner linear 1s infinite;
+  animation: lds-spinner linear 1s infinite;
+  width: 12rpx;
+  height: 24rpx;
+  border-radius: 40%;
+  -webkit-transform-origin: 6rpx 52rpx;
+  transform-origin: 6rpx 52rpx;
+}
+
+.lds-spinner .spinner1 {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-animation-delay: -0.916666666666667s;
+  animation-delay: -0.916666666666667s;
+}
+
+.lds-spinner .spinner2 {
+  -webkit-transform: rotate(30deg);
+  transform: rotate(30deg);
+  -webkit-animation-delay: -0.833333333333333s;
+  animation-delay: -0.833333333333333s;
+}
+
+.lds-spinner .spinner3 {
+  -webkit-transform: rotate(60deg);
+  transform: rotate(60deg);
+  -webkit-animation-delay: -0.75s;
+  animation-delay: -0.75s;
+}
+
+.lds-spinner .spinner4 {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-animation-delay: -0.666666666666667s;
+  animation-delay: -0.666666666666667s;
+}
+
+.lds-spinner .spinner5 {
+  -webkit-transform: rotate(120deg);
+  transform: rotate(120deg);
+  -webkit-animation-delay: -0.583333333333333s;
+  animation-delay: -0.583333333333333s;
+}
+
+.lds-spinner .spinner6 {
+  -webkit-transform: rotate(150deg);
+  transform: rotate(150deg);
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+
+.lds-spinner .spinner7 {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  -webkit-animation-delay: -0.416666666666667s;
+  animation-delay: -0.416666666666667s;
+}
+
+.lds-spinner .spinner8 {
+  -webkit-transform: rotate(210deg);
+  transform: rotate(210deg);
+  -webkit-animation-delay: -0.333333333333333s;
+  animation-delay: -0.333333333333333s;
+}
+
+.lds-spinner .spinner9 {
+  -webkit-transform: rotate(240deg);
+  transform: rotate(240deg);
+  -webkit-animation-delay: -0.25s;
+  animation-delay: -0.25s;
+}
+
+.lds-spinner .spinner10 {
+  -webkit-transform: rotate(270deg);
+  transform: rotate(270deg);
+  -webkit-animation-delay: -0.166666666666667s;
+  animation-delay: -0.166666666666667s;
+}
+
+.lds-spinner .spinner11 {
+  -webkit-transform: rotate(300deg);
+  transform: rotate(300deg);
+  -webkit-animation-delay: -0.083333333333333s;
+  animation-delay: -0.083333333333333s;
+}
+
+.lds-spinner .spinner12 {
+  -webkit-transform: rotate(330deg);
+  transform: rotate(330deg);
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+
+.spinner-box {
+  width: 60rpx;
+  height: 60rpx;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+.spinner-box.large {
+  width: 90rpx;
+  height: 90rpx;
+}
+
+.lds-spinner {
+  width: 200rpx !important;
+  height: 200rpx !important;
+  -webkit-transform: translate(-100rpx, -100rpx) scale(0.3) translate(100rpx, 100rpx);
+  transform: translate(-100rpx, -100rpx) scale(0.3) translate(100rpx, 100rpx);
+}
+
+.lds-spinner.normal {
+  -webkit-transform: translate(-100rpx, -100rpx) scale(0.5) translate(100rpx, 100rpx);
+  transform: translate(-100rpx, -100rpx) scale(0.5) translate(100rpx, 100rpx);
+}
+
+.lds-spinner.large {
+  -webkit-transform: translate(-100rpx, -100rpx) scale(0.5) translate(100rpx, 100rpx);
+  transform: translate(-100rpx, -100rpx) scale(0.5) translate(100rpx, 100rpx);
+}
+
+</style>
