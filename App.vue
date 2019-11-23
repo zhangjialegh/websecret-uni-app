@@ -4,7 +4,7 @@
         onLaunch: function(options) {
 			// #ifndef H5
 			Vue.gd.initOptions(options)
-			Vue.gd.wxLogin(options)
+			Vue.gd.uniLogin(options)
 			// #endif
         },
         onShow: function() {

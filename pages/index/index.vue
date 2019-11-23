@@ -54,9 +54,12 @@
 		methods: {
 			getAllCards() {
 				const vx = this
+				this.isLoading = this.$store.state.accessToken ? true : false
+				// #ifdef H5
 				this.isLoading = true
+				// #endif
 				Vue.gd.wxRequest({
-					url: 'cards/list',
+					url: 'card/list',
 					isGet: true
 				}).then(res => {
 					vx.isLoading = false
@@ -64,12 +67,25 @@
 						item['updatedAt'] = Vue.gd.smartTime(item['updatedAt'])
 						return item
 					})
+				}).catch(err => {
+					vx.isLoading = false
 				})
 			},
-			goAddCard(id) {
-				uni.navigateTo({
-					url: '/pages/addinfo/addinfo'
-				})
+			goAddCard() {
+				let isLogin = this.$store.state.accessToken ? true : false
+				// #ifdef H5
+				isLogin = true
+				// #endif
+				if (isLogin) {
+					uni.navigateTo({
+						url: '/pages/addinfo/addinfo'
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages/sendcode/sendcode'
+					})
+				}
+				
 			},
 
 			// 点击卡片去详情页
@@ -127,13 +143,14 @@
 		bottom: 50rpx;
 		right: 50rpx;
 		background: var(--base-color) !important;
-		border-radius: 50%;
+		border-radius: 50% !important;
 		overflow: hidden;
 		padding: 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		z-index: 5;
+		border: none;
 	}
 
 	.add-btn>.iconfont {
@@ -148,6 +165,8 @@
 		padding: 30rpx;
 		position: relative;
 		text-align: left;
+		height: auto;
+		line-height: 1.5;
 	}
 
 	.record-item>.logo-box {
@@ -169,11 +188,12 @@
 	}
 
 	.record-item>.record>text {
-		display: block;
+		display: inline-block;
 		width: 500rpx;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		text-align: left;
 	}
 
 	.record-item>.record>.title {

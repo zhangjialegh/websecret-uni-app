@@ -10,7 +10,10 @@
 
 			<view class="login-box">
 				<view class="input-box">
-					<input type="text" :value="unicode" placeholder="请输入登录码" @input="handleInput" />
+					<input type="text" :value="email" placeholder="请输入邮箱" @input="handleInputEmail" />
+				</view>
+				<view class="input-box">
+					<input type="password" :value="password" placeholder="请输入密码" @input="handleInputPwd" />
 				</view>
 				<button plain class="login-btn" @tap="h5Login">登录</button>
 			</view>
@@ -27,48 +30,58 @@
 	export default {
 		data() {
 			return {
-				unicode: ''
+				email: '',
+				password: ''
 			}
 		},
 		onLoad() {
 		},
 		methods: {
-			handleInput(e) {
-				this.unicode = e.detail.value
+			handleInputEmail(e) {
+				this.email = e.detail.value
 			},
-			handlePress() {
-				const vx = this
-				uni.setClipboardData({
-					data: this.code,
-					success(res) {
-						vx.$gd.wxToast({
-							title: '登录码复制成功',
-							icon: 'success'
-						})
-					}
-				})
+			handleInputPwd(e) {
+				this.password = e.detail.value
 			},
 			h5Login() {
 				const vx = this
-				if (!this.unicode) {
+				if (!this.email) {
 					this.$gd.wxToast({
-						title: '登录码不能为空',
+						title: '邮箱不能为空',
 						icon: 'none'
 					})
-					return
-				}
-				this.$gd.wxRequest({
-					url: 'h5/login',
-					isGet: false,
-					data: {
-						unicode: this.unicode
-					}
-				}).then(res => {
-					vx.$gd.loginSuccess(res)
-					uni.reLaunch({
-						url: '/pages/index/index'
+				} else if (!this.$gd.checkEmail(this.email)) {
+					this.$gd.wxToast({
+						title: '请输入有效的邮箱',
+						icon: 'none'
 					})
-				})
+				} else if (!this.password) {
+					this.$gd.wxToast({
+						title: '密码不能为空',
+						icon: 'none'
+					})
+				} else {
+					this.$gd.wxRequest({
+						url: 'account/login',
+						isGet: false,
+						data: {
+							email: this.email,
+							password: this.$gd.md5(this.password),
+							type: 'h5'
+						}
+					}).then(res => {
+						if (res.success) {
+							vx.$gd.loginSuccess(res.data)
+							vx.$gd.wxToast({
+								title: '登录成功'
+							})
+							uni.reLaunch({
+								url: '/pages/index/index'
+							})
+						}
+					})
+				}
+				
 			},
 			previewImage() {
 				uni.previewImage({
@@ -130,6 +143,7 @@
 	.input-box {
 		width: 100%;
 		border: 1rpx solid #e8e8e8;
+		margin-bottom: 20rpx;
 	}
 
 	.input-box input {

@@ -20,6 +20,18 @@
             "path" : "pages/login/login",
             "style" : {}
         }
+        ,{
+            "path" : "pages/sendcode/sendcode",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/checkcode/checkcode",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/typepass/typepass",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -38,6 +50,21 @@
 			{
 				"name": "微信登录调试", //模式名称
 				"path": "pages/login/login", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "密码页面", //模式名称
+				"path": "pages/typepass/typepass", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "邮箱页面", //模式名称
+				"path": "pages/sendcode/sendcode", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "验证页面", //模式名称
+				"path": "pages/checkcode/checkcode", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]

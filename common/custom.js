@@ -9,7 +9,34 @@ export default {
 				Vue.store.commit('setQuery', options.query)
 				Vue.store.commit('setScene', options.scene)
 			},
-			wxLogin: function(options) { //登录逻辑
+			uniRegist: function() {
+				return new Promise((resolve, reject) => {
+					uni.login({
+						success: res => {
+							let code = ''
+							let type = ''
+							// #ifdef MP-WEIXIN
+							type = 'weixin'
+							code = res.code
+							// #endif
+
+							// #ifdef MP-ALIPAY
+							type = 'alipay'
+							code = res.authCode
+							// #endif
+							resolve({
+								code,
+								type
+							})
+						},
+						fail: (err) => {
+							Vue.gd.reqOperation(err)
+							reject(err)
+						}
+					})
+				})
+			},
+			uniLogin: function(options) { //登录逻辑
 				const vx = Vue.gd;
 				const scene = options.scene
 				return new Promise((resolve, reject) => {
@@ -21,13 +48,13 @@ export default {
 							type = 'weixin'
 							code = res.code
 							// #endif
-							
+
 							// #ifdef MP-ALIPAY
 							type = 'alipay'
 							code = res.authCode
 							// #endif
 							uni.request({
-								url: OPT.api + '/api/' + 'wechat/login',
+								url: OPT.api + '/v2api/' + 'account/login',
 								method: 'post',
 								header: {
 									'content-type': 'application/json'
@@ -39,17 +66,20 @@ export default {
 								},
 								success: function(res) {
 									if (res.data.success) {
-										Vue.gd.loginSuccess(res.data)
+										Vue.gd.loginSuccess(res.data.data)
 										if (loginCallback) {
-											Promise.resolve(loginCallback(res.data.third_session))
+											Promise.resolve(loginCallback(res.data.data.third_session))
 										}
-										resolve(res.data.third_session);
+										resolve(res.data.data.third_session);
 									} else {
-										Vue.gd.reqOperation(res)
-										reject();
+										// Vue.gd.reqOperation(res.data)
+										resolve(res.data)
 									}
 								}
 							})
+						},
+						fail: (err) => {
+							reject(err)
 						}
 					})
 				})
@@ -81,14 +111,19 @@ export default {
 				const vx = Vue.gd
 				const token = Vue.store.state.accessToken || accesstoken || uni.getStorageSync(OPT.key) || '';
 				return new Promise((resolve, reject) => {
+					let check = ''
+					// #ifdef H5
+					check = '1'
+					// #endif
 					uni.request({
-						url: OPT.api + '/api/' + obj.url,
+						url: OPT.api + '/v2api/' + obj.url,
 						method: obj.isGet ? 'get' : 'post',
 						header: {
 							'content-type': 'application/json',
+							'check': check,
 							'Authorization': obj.token ?
 								obj.token : token ?
-								token : null
+								token : ''
 						},
 						data: obj.data,
 						success: function(result) {
@@ -129,7 +164,8 @@ export default {
 						})
 				})
 				// #endif
-				if (token) {
+
+				if (token || obj.notAuth) {
 					return new Promise((resolve, reject) => {
 						vx.wxFetch(obj)
 							.then((res) => {
@@ -154,7 +190,7 @@ export default {
 			},
 			reqOperation: function(data) {
 				// #ifdef H5
-				if (data.statusCode === 401 || data.statusCode === 403) {
+				if (data.statusCode === 401) {
 					uni.navigateTo({
 						url: '/pages/login/login'
 					})
@@ -250,8 +286,9 @@ export default {
 				const hour = date.getHours()
 				const minute = date.getMinutes()
 				const second = date.getSeconds()
-				return [year, month, day].map(Vue.gd.formatNumber).join('/') + ' ' + [hour, minute, second].map(Vue.gd.formatNumber).join(
-					':')
+				return [year, month, day].map(Vue.gd.formatNumber).join('/') + ' ' + [hour, minute, second].map(Vue.gd.formatNumber)
+					.join(
+						':')
 			},
 			formatNumber: n => {
 				n = n.toString()
@@ -348,6 +385,10 @@ export default {
 			isValid: (item) => {
 				return item !== undefined && item !== '';
 			},
+			checkEmail: (str) => {
+				const szReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
+				return szReg.test(str)
+			},
 			smartTime: (date) => {
 				const delta = Date.now() - date
 				const ceil = Math.ceil
@@ -360,7 +401,8 @@ export default {
 				} else {
 					return hours + '小时前'
 				}
-			}
+			},
+			md5: md5
 		}
 	}
 }

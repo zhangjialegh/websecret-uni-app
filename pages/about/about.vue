@@ -13,10 +13,6 @@
 				<text class='paragraph'>网密是一款帮助用户储存网络账号的小软件，同时可以通过<text class="heavy">前端实时计算密码，无需后台存储，更加安全</text>，用户只要记住一个密码，就可以为不同的网络账号生成密码。</text>
 				<text class='paragraph'>Web平台请访问 <text class="heavy" :selectable="true">{{web}}</text></text>
 			</view>
-			<view class="getPhoneBox" v-if="code">
-				<view class="content">为了保证账号同步，需要网页登录码：<text class="uni-code" :selectable="true" @longpress="handlePress">{{code}}</text>；凭此号码，你可以直接登录web平台。</view>
-			</view>
-
 			<view class='title-1'>说明</view>
 			<view class='content'>
 				<text class='paragraph'>1. <text class="heavy">记忆密码</text>就是需要你真实记忆的密码序列。</text>
@@ -31,34 +27,7 @@
 	export default {
 		data() {
 			return {
-				web: this.$cg.BASE_URL,
-				code: ''
-			}
-		},
-		onLoad () {
-			this.getUnicode()
-		},
-		methods: {
-			handlePress () {
-				const vx = this
-				uni.setClipboardData({
-					data: this.code,
-					success(res) {
-						vx.$gd.wxToast({
-							title: '登录码复制成功',
-							icon: 'success'
-						})
-					}
-				})
-			},
-			getUnicode() {
-				const vx = this
-				this.$gd.wxRequest({
-					url: 'user/code',
-					isGet: true
-				}).then(res => {
-					vx.code = res.data.unicode
-				})
+				web: this.$cg.BASE_URL
 			}
 		}
 	}

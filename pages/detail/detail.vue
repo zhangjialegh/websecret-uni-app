@@ -304,8 +304,7 @@
 	}
 
 	.section {
-		flex: 1;
-		height: 280rpx;
+		height: calc(100% - 250rpx);
 	}
 
 	.input-wrapper {

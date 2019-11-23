@@ -124,12 +124,13 @@
             "https" : false,
             "disableHostCheck" : true,
             "proxy" : {
-                "/api" : {
-                    "target" : "http://localhost:8002",
+                "/v2api" : {
+                    "target" : "http://localhost:8003",
                     "changeOrigin" : true,
                     "secure" : false
                 }
             }
-        }
+        },
+        "domain" : "https://abc.zhangjiale.club"
     }
 }

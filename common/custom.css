@@ -1,6 +1,7 @@
 page {
   width: 100%;
   height: 100%;
+  background-color: #fff;
   --base-color: #73b9a2;
   --text-base-color: #1d1d1d;
   --text-black-color: #000000;
@@ -39,6 +40,10 @@ page scroll-view {
 .section {
   position: relative;
   padding: 0 30rpx;
+}
+
+button {
+	border: none;
 }
 
 button[plain] {

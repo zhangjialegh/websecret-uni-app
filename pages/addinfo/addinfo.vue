@@ -81,7 +81,7 @@
 				} else {
 					// TODO: 提交更新
 					this.$gd.wxRequest({
-						url: 'cards/insert',
+						url: 'card/insert',
 						isGet: false,
 						data: {
 							webname,
@@ -119,6 +119,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border: none;
 	}
 
 	.save-btn>.text {
