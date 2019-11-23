@@ -5,7 +5,7 @@
 			<text class='iconfont icon-plus'></text>
 		</button>
 
-		<button :data-id="item.id" v-for="(item, index) in cardLists" :key="item.name+index" @tap='goCardDetail' plain class='record-item'
+		<button :data-id="item.id" v-for="(item) in cardLists" :key="item.name" @tap='goCardDetail' plain class='record-item'
 		 @longtap='handleMoreOpt' hover-class='button-hover-class'>
 			<view class='logo-box'>
 				<text>{{item.logo}}</text>
@@ -15,7 +15,7 @@
 				<text class='title'>{{item.webname}}</text>
 				<text class='desc'>更新时间：{{item.updatedAt}}</text>
 			</view>
-	
+
 		</button>
 
 		<!-- loading-page -->
@@ -27,8 +27,9 @@
 </template>
 
 <script>
-	import loadingpage from '@/components/loadingpage.vue'
-	import moview from '@/components/moview.vue'
+	import loadingpage from '@/components/loadingpage/loadingpage.vue'
+	import moview from '@/components/moview/moview.vue'
+	import Vue from 'vue'
 	export default {
 		components: {
 			loadingpage,
@@ -41,23 +42,28 @@
 				taplock: false
 			};
 		},
-		onLoad (op) {
-			console.log(op, 'load')
+		onLoad() {
 			this.getAllCards()
 		},
+		// #ifndef H5
+		onShareAppMessage() {
+
+		},
+		// #endif
+
 		methods: {
 			getAllCards() {
 				const vx = this
 				this.isLoading = true
-				this.$gd.wxRequest({
+				Vue.gd.wxRequest({
 					url: 'cards/list',
 					isGet: true
 				}).then(res => {
 					vx.isLoading = false
 					vx.cardLists = res.data.map(item => {
-							item['updatedAt'] = vx.$gd.smartTime(item['updatedAt'])
-							return item
-						})
+						item['updatedAt'] = Vue.gd.smartTime(item['updatedAt'])
+						return item
+					})
 				})
 			},
 			goAddCard(id) {
@@ -74,7 +80,7 @@
 				}
 				const id = e.target.dataset.id
 				uni.navigateTo({
-					url: '/pages/detail/detail?id=' + id
+					url: '/pages/detail/detail?oid=' + id
 				})
 			},
 
@@ -104,9 +110,9 @@
 					}
 				}).then(res => {
 					vx.cardLists = res.data.map(item => {
-							item['updatedAt'] = vx.$gd.smartTime(item['updatedAt'])
-							return item
-						})
+						item['updatedAt'] = vx.$gd.smartTime(item['updatedAt'])
+						return item
+					})
 				})
 			}
 		}
@@ -127,6 +133,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		z-index: 5;
 	}
 
 	.add-btn>.iconfont {

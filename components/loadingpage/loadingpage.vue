@@ -9,7 +9,7 @@
 </template>
 
 <script>
-	import loadicon from '@/components/loadicon'
+	import loadicon from '@/components/loadicon/loadicon.vue'
 	export default {
 		components: {loadicon},
 		props:{

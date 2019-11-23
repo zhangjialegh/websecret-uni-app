@@ -88,7 +88,7 @@
             "minified" : true,
             "postcss" : true
         },
-        "usingComponents" : false,
+        "usingComponents" : true,
         "permission" : {}
     },
     "mp-alipay" : {
@@ -125,7 +125,7 @@
             "disableHostCheck" : true,
             "proxy" : {
                 "/api" : {
-                    "target" : "https://abc.zhangjiale.club",
+                    "target" : "http://localhost:8002",
                     "changeOrigin" : true,
                     "secure" : false
                 }

@@ -9,24 +9,23 @@ export default {
 				Vue.store.commit('setQuery', options.query)
 				Vue.store.commit('setScene', options.scene)
 			},
-			getCode: function(options) {
-				const vx = Vue.gd;
-				const scene = options.scene
-				return new Promise((resolve, reject) => {
-					uni.login({
-						success: (res) => {
-							vx.wxLogin()
-						}
-					})
-				})
-			},
 			wxLogin: function(options) { //登录逻辑
 				const vx = Vue.gd;
 				const scene = options.scene
 				return new Promise((resolve, reject) => {
 					uni.login({
 						success: res => {
-							console.log(res)
+							let code = ''
+							let type = ''
+							// #ifdef MP-WEIXIN
+							type = 'weixin'
+							code = res.code
+							// #endif
+							
+							// #ifdef MP-ALIPAY
+							type = 'alipay'
+							code = res.authCode
+							// #endif
 							uni.request({
 								url: OPT.api + '/api/' + 'wechat/login',
 								method: 'post',
@@ -34,8 +33,9 @@ export default {
 									'content-type': 'application/json'
 								},
 								data: {
-									code: res.code,
-									scene: scene
+									code,
+									scene,
+									type
 								},
 								success: function(res) {
 									if (res.data.success) {
@@ -45,11 +45,7 @@ export default {
 										}
 										resolve(res.data.third_session);
 									} else {
-										vx.wxToast({
-											icon: 'none',
-											title: '登录失败',
-											duration: 1500
-										});
+										Vue.gd.reqOperation(res)
 										reject();
 									}
 								}
@@ -157,7 +153,6 @@ export default {
 				}
 			},
 			reqOperation: function(data) {
-				console.log(data, 'h5')
 				// #ifdef H5
 				if (data.statusCode === 401 || data.statusCode === 403) {
 					uni.navigateTo({

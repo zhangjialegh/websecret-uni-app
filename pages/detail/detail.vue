@@ -65,7 +65,7 @@
 </template>
 
 <script>
-	import loadingpage  from '@/components/loadingpage.vue'
+	import loadingpage  from '@/components/loadingpage/loadingpage.vue'
 	export default {
 		components: {loadingpage},
 		data() {
@@ -87,8 +87,8 @@
 		},
 		onLoad(options) {
 			this.daynamicBgs()
-			this.getCardDetail(options.id)
-			this.id = options.id
+			this.getCardDetail(options.oid)
+			this.id = options.oid
 		},
 		methods: {
 			isValid(val) {

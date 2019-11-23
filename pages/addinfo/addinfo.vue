@@ -91,10 +91,11 @@
 					}).then(res => {
 						if (res.success) {
 							const pages = getCurrentPages()
-							const PrePage = pages[pages.length - 2]
-							console.log(pages, PrePage, 'papge')
-							PrePage.getAllCards()
-							uni.navigateBack()
+							if (pages.length > 1) {
+								const PrePage = pages[pages.length - 2]
+								PrePage.$vm.getAllCards()
+								uni.navigateBack()
+							}
 						}
 					})
 				}

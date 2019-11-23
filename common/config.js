@@ -6,4 +6,4 @@ export const COLORS_PICK = ['#b7ba6b', '#426ab3', '#d93a49', '#f26522', '#006c54
 
 /****** 合投项目 ******/
 export const BASE_URL = 'https://abc.zhangjiale.club'
-// export const BASE_URL = 'http://localhost:8000'
+// export const BASE_URL = 'http://localhost:8002'

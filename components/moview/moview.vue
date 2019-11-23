@@ -64,6 +64,7 @@
   justify-content: flex-end;
   align-items: center;
   background: var(--base-color);
+  z-index: 5;
   /* border: 1rpx solid #000; */
   /* box-shadow: 0 0 0 1rpx rgba(0,0,0,.1), 0 2px 4px 0 rgba(0,0,0,.16); */
 }
