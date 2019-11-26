@@ -67,20 +67,20 @@
 					webname
 				} = this
 				if (!this.isValid(webname)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						icon: 'none',
 						title: '网站名不能为空',
 						duration: 1500
 					})
 				} else if (!this.isValid(name)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						icon: 'none',
 						title: '登录名不能为空',
 						duration: 1500
 					})
 				} else {
 					// TODO: 提交更新
-					this.$gd.wxRequest({
+					this.$gd.uniRequest({
 						url: 'card/insert',
 						isGet: false,
 						data: {

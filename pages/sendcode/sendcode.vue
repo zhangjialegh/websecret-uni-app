@@ -39,44 +39,29 @@
 			sendCode() {
 				const vx = this
 				if (!this.email) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '邮箱不能为空',
 						icon: 'none'
 					})
 				} else if (!this.$gd.checkEmail(this.email)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '请输入邮箱的邮箱地址',
 						icon: 'none'
 					})
 				} else {
-					this.$gd.uniRegist()
-					.then(res => {
-						vx.$gd.wxRequest({
-							url: 'mail/send',
-							isGet: false,
-							notAuth: true,
-							data: {
-								email: vx.email,
-								code: res.code,
-								type: res.type
-							}
-						}).then(res => {
-							if (res.success) {
-								if (res.data && res.data.id) {
-									vx.$gd.loginSuccess(res.data)
-									vx.$gd.wxToast({
-										title: '登录成功'
-									})
-									uni.reLaunch({
-										url: '/pages/index/index'
-									})
-								} else {
-									uni.navigateTo({
-										url: '/pages/checkcode/checkcode?email='+ vx.email
-									})
-								}
-							}
-						})
+					this.$gd.uniRequest({
+						url: 'mail/send',
+						isGet: false,
+						notAuth: true,
+						data: {
+							email: this.email
+						}
+					}).then(res => {
+						if (res.success) {
+							uni.navigateTo({
+								url: '/pages/checkcode/checkcode?email='+ this.email
+							})
+						}
 					})
 				}
 			}

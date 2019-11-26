@@ -6,8 +6,8 @@ import pageFoot from './components/page-foot.vue'
 import uLink from '@/components/uLink.vue'
 import store from './store'
 const config = require('@/common/config.js')
-import gd from '@/common/custom.js'
-import '@/common/ican-H5Api'
+import gd from '@/common/global.js'
+import '@/widget/ican-H5Api'
 
 Vue.config.productionTip = false
 

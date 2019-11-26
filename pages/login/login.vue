@@ -46,22 +46,22 @@
 			h5Login() {
 				const vx = this
 				if (!this.email) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '邮箱不能为空',
 						icon: 'none'
 					})
 				} else if (!this.$gd.checkEmail(this.email)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '请输入有效的邮箱',
 						icon: 'none'
 					})
 				} else if (!this.password) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '密码不能为空',
 						icon: 'none'
 					})
 				} else {
-					this.$gd.wxRequest({
+					this.$gd.uniRequest({
 						url: 'account/login',
 						isGet: false,
 						data: {
@@ -72,7 +72,7 @@
 					}).then(res => {
 						if (res.success) {
 							vx.$gd.loginSuccess(res.data)
-							vx.$gd.wxToast({
+							vx.$gd.uniToast({
 								title: '登录成功'
 							})
 							uni.reLaunch({

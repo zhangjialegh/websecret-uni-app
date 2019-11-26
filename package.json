@@ -11,5 +11,8 @@
                 }
             }
         }
+    },
+    "dependencies": {
+        "mescroll-uni": "^1.1.8"
     }
 }

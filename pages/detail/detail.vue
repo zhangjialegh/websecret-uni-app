@@ -131,13 +131,13 @@
 					this.editing = true
 				} else {
 					if (!this.isValid(name)) {
-						vx.$gd.wxToast({
+						vx.$gd.uniToast({
 							title: '登录名不能为空',
 							duration: 1500
 						})
 					} else {
 						// TODO: 提交更新
-						vx.$gd.wxRequest({
+						vx.$gd.uniRequest({
 							url: 'card/update',
 							isGet: false,
 							data: {
@@ -147,7 +147,7 @@
 							}
 						}).then(res => {
 							if (res.success) {
-								vx.$gd.wxToast({
+								vx.$gd.uniToast({
 									title: '信息更新成功'
 								})
 								vx.editing = false
@@ -162,7 +162,7 @@
 				uni.setClipboardData({
 					data: this.name,
 					success(res) {
-						vx.$gd.wxToast({
+						vx.$gd.uniToast({
 							title: '登录名复制成功',
 							icon: 'success'
 						})
@@ -174,7 +174,7 @@
 				uni.setClipboardData({
 					data: this.genePwd,
 					success(res) {
-						vx.$gd.wxToast({
+						vx.$gd.uniToast({
 							title: '密码复制成功',
 							icon: 'success'
 						})
@@ -188,12 +188,12 @@
 					diffCode
 				} = this
 				if (!this.isValid(recordPwd)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '记忆密码不能为空',
 						icon: 'none'
 					})
 				} else if (!this.isValid(diffCode)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '区分代号不能为空',
 						icon: 'none'
 					})
@@ -218,7 +218,7 @@
 			getCardDetail(id) {
 				const vx = this
 				this.isLoading = true
-				this.$gd.wxRequest({
+				this.$gd.uniRequest({
 					url: 'card/detail',
 					isGet: true,
 					data: {

@@ -43,14 +43,14 @@
 			checkCode() {
 				const vx = this
 				if (this.password !== this.repassword) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '两次输入的密码不一致',
 						icon: 'none'
 					})
 				} else {
 					this.$gd.uniRegist()
 					.then(res => {
-						vx.$gd.wxRequest({
+						vx.$gd.uniRequest({
 							url: 'account/regist',
 							isGet: false,
 							notAuth: true,
@@ -63,7 +63,7 @@
 						}).then(res => {
 							if (res.success) {
 								vx.$gd.loginSuccess(res.data)
-								vx.$gd.wxToast({
+								vx.$gd.uniToast({
 									title: '登录成功'
 								})
 								uni.reLaunch({

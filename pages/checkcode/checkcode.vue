@@ -7,6 +7,8 @@
 				</view>
 				<text class='app-name'>网密</text>
 			</view>
+			
+			<view class="notice-body" v-if="email">验证码已发送<text>{{email}}</text></view>
 
 			<view class="login-box">
 				<view class="input-box">
@@ -36,33 +38,47 @@
 			checkCode() {
 				const vx = this
 				if (!this.yzcode) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '验证码不能为空',
 						icon: 'none'
 					})
 				} else if (!(this.yzcode.length === 4 || this.yzcode.length === 6)) {
-					this.$gd.wxToast({
+					this.$gd.uniToast({
 						title: '验证码无效',
 						icon: 'none'
 					})
 				} else {
-					this.$gd.wxRequest({
-						url: 'mail/check',
-						isGet: false,
-						notAuth: true,
-						data: {
-							code: this.yzcode,
-							email: this.email
-						}
-					}).then(res => {
-						if (res.success) {
-							uni.navigateTo({
-								url: '/pages/typepass/typepass?email='+ vx.email
-							})
-						}
+					this.$gd.uniRegist()
+					.then(res => {
+						vx.$gd.uniRequest({
+							url: 'mail/check',
+							isGet: false,
+							notAuth: true,
+							data: {
+								code: this.yzcode,
+								email: this.email,
+								ucode: res.code,
+								type: res.type
+							}
+						}).then(res => {
+							if (res.success) {
+								if (res.data && res.data.id) {
+									vx.$gd.loginSuccess(res.data)
+									vx.$gd.uniToast({
+										title: '登录成功'
+									})
+									uni.reLaunch({
+										url: '/pages/index/index'
+									})
+								} else {
+									uni.navigateTo({
+										url: '/pages/typepass/typepass?email='+ vx.email
+									})
+								}
+							}
+						})
 					})
 				}
-				
 			}
 		}
 	}
@@ -96,6 +112,17 @@
 		justify-content: center;
 		align-items: center;
 		margin-bottom: 15rpx;
+	}
+	.notice-body {
+		font-size: 30rpx;
+		display: inline-block;
+		width: 100%;
+		text-align: center;
+		margin-top: 50rpx;
+	}
+	
+	.notice-body > text {
+		color: var(--base-color);
 	}
 
 	.logo-box>image {

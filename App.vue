@@ -16,8 +16,7 @@
 		}
     }
 </script>
-
 <style>
     @import './common/icon.css';
-    @import './common/custom.css';
+    @import './common/base.css';
 </style>

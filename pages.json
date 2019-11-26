@@ -2,7 +2,13 @@
 	"pages": [
 		{
             "path" : "pages/index/index",
-            "style" : {}
+            "style" : {
+				"enablePullDownRefresh": false,
+				"disableScroll": true,
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
         }
         ,{
             "path" : "pages/about/about",
