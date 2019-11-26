@@ -101,7 +101,7 @@
         "usingComponents" : true
     },
     "h5" : {
-        "template" : "index.html",
+        "template" : "template.h5.html",
         "router" : {
             "mode" : "history",
             "base" : "/"

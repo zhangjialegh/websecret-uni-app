@@ -11,19 +11,11 @@
 			}
         }
         ,{
-            "path" : "pages/about/about",
-            "style" : {}
-        }
-        ,{
             "path" : "pages/detail/detail",
             "style" : {}
         }
         ,{
             "path" : "pages/addinfo/addinfo",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/login/login",
             "style" : {}
         }
         ,{
@@ -37,7 +29,19 @@
         ,{
             "path" : "pages/typepass/typepass",
             "style" : {}
-        }
+        },
+		// #ifdef H5 || APP-PLUS
+		{
+		    "path" : "platforms/h5/login/login",
+		    "style" : {}
+		},
+		// #endif
+		{
+		    "path" : "pages/about/about",
+		    "style" : {
+				"navigationBarTitleText": "关于"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
