@@ -2,8 +2,8 @@
 	import Vue from 'vue'
     export default {
         onLaunch: function(options) {
-			// #ifndef H5
 			Vue.gd.initOptions(options)
+			// #ifndef H5
 			Vue.gd.uniLogin(options)
 			// #endif
         },

@@ -42,6 +42,10 @@
 				"navigationBarTitleText": "关于"
 			}
 		}
+        ,{
+            "path" : "pages/movable/movable",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -75,6 +79,11 @@
 			{
 				"name": "验证页面", //模式名称
 				"path": "pages/checkcode/checkcode", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "拖动页面", //模式名称
+				"path": "pages/movable/movable", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]
