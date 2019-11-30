@@ -1,4 +1,5 @@
 const md5 = require('@/widget/md5.js')
+const {drawjs} = require('@/common/draw.js')
 
 module.exports = {
 	formatTime: date => {
@@ -125,5 +126,6 @@ module.exports = {
 			return hours + '小时前'
 		}
 	},
-	md5: md5
+	md5: md5,
+	drawjs: drawjs
 }
