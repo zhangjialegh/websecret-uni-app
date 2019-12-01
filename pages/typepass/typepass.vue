@@ -3,7 +3,7 @@
 		<view class='section'>
 			<view class='logo-wrapper'>
 				<view class='logo-box'>
-					<image src='../../static/logo.jpeg'></image>
+					<image src='../../static/logo.png'></image>
 				</view>
 				<text class='app-name'>网密</text>
 			</view>

@@ -5,12 +5,12 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
     context.fillText(text, x, y);
     return;
   }
-  var words = text.split('');
-  var currentLine = 0;
-  var idx = 1;
+  let words = text.split('');
+  let currentLine = 0;
+  let idx = 1;
   while (words.length > 0 && idx <= words.length) {
-    var str = words.slice(0, idx).join('');
-    var w = context.measureText(str).width;
+    const str = words.slice(0, idx).join('');
+    const w = context.measureText(str).width;
     if (w > fitWidth) {
       if (idx == 1) {
         idx = 2;
@@ -48,7 +48,6 @@ exports.drawjs = (ctx, drawData) => {
     if (global.url) {
       loadImage(global.url)
         .then(img => {
-			console.log(img, 'ddddddd')
           ctx.save()
           ctx.drawImage(img, 0, 0, global.width, global.height)
           ctx.restore()
@@ -65,7 +64,6 @@ exports.drawjs = (ctx, drawData) => {
       imgs.forEach((item) => {
         loadImage(item.url)
           .then(img => {
-			  console.log(img, 'mmmmm')
             ctx.save()
             ctx.translate(item.left+item.width / 2, item.top+item.height / 2)
             ctx.rotate(item.angle * Math.PI / 180)
@@ -90,7 +88,7 @@ exports.drawjs = (ctx, drawData) => {
       fonts.forEach((item) => {
         ctx.save()
         ctx.font = `${item.fontSize || 14}px ${item.fontFamily || 'Roboto Mono'}`
-        ctx.fillStyle = `${item.fillStyle || '#333333'}`
+        ctx.fillStyle = `${item.fillStyle || item.color || '#333333'}`
         printAtWordWrap(ctx, item.text, item.left, item.top, item.lineHeight, item.width)
         ctx.restore()
         if (n === len - 1) {

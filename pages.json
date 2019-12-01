@@ -4,21 +4,65 @@
             "path" : "pages/index/index",
             "style" : {
 				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"backgroundColor": "#FFFFFF"
+			}
+        }
+		,{
+		    "path" : "pages/websecret/index/index",
+		    "style" : {
+				"navigationBarTitleText": "网密",
+				"enablePullDownRefresh": false,
 				"disableScroll": true,
 				"app-plus": {
 					"bounce": "none"
 				}
 			}
+		}
+        ,{
+            "path" : "pages/websecret/detail/detail",
+            "style" : {
+				"navigationBarTitleText": "网密"
+			}
         }
         ,{
-            "path" : "pages/detail/detail",
-            "style" : {}
+            "path" : "pages/websecret/addinfo/addinfo",
+            "style" : {
+				"navigationBarTitleText": "网密"
+			}
         }
-        ,{
-            "path" : "pages/addinfo/addinfo",
-            "style" : {}
-        }
-        ,{
+		,{
+		    "path" : "pages/websecret/about/about",
+		    "style" : {
+				"navigationBarTitleText": "网密"
+			}
+		},
+		{
+		    "path" : "pages/puzzle/index/index",
+		    "style" : {
+				"navigationBarTitleText": "拼图"
+			}
+		}
+		,{
+		    "path" : "pages/puzzle/canvas/canvas",
+		    "style" : {
+				"navigationBarTitleText": "拼图"
+			}
+		}
+		,{
+		    "path" : "pages/weather/weather",
+		    "style" : {
+				"navigationBarTitleText": "天气"
+			}
+		},
+		// #ifdef H5 || APP-PLUS
+		{
+		    "path" : "platforms/h5/login/login",
+		    "style" : {}
+		},
+		// #endif
+        {
             "path" : "pages/sendcode/sendcode",
             "style" : {}
         }
@@ -29,27 +73,19 @@
         ,{
             "path" : "pages/typepass/typepass",
             "style" : {}
-        },
-		// #ifdef H5 || APP-PLUS
-		{
-		    "path" : "platforms/h5/login/login",
-		    "style" : {}
-		},
-		// #endif
-		{
-		    "path" : "pages/about/about",
-		    "style" : {
-				"navigationBarTitleText": "关于"
-			}
-		}
+        }
         ,{
-            "path" : "pages/movable/movable",
-            "style" : {}
+            "path" : "pages/2048/2048",
+            "style" : {
+				"navigationBarTitleText": "2048",
+				"navigationBarBackgroundColor": "#776e65",
+				"backgroundColor": "#776e65"
+			}
         }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "网密",
+		"navigationBarTitleText": "青云器",
 		"navigationBarBackgroundColor": "#73b9a2",
 		"backgroundColor": "#FFFFFF",
 		"backgroundColorTop": "#F4F5F6",

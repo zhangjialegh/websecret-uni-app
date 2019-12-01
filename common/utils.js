@@ -1,5 +1,6 @@
 const md5 = require('@/widget/md5.js')
 const {drawjs} = require('@/common/draw.js')
+const {areaInfo} = require('@/common/area.js')
 
 module.exports = {
 	formatTime: date => {
@@ -127,5 +128,6 @@ module.exports = {
 		}
 	},
 	md5: md5,
-	drawjs: drawjs
+	drawjs: drawjs,
+	area: areaInfo
 }

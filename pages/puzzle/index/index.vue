@@ -1,25 +1,32 @@
 <template>
-	<view class="movable-area" @touchmove.prevent.stop @touchstart="handleAreaStart" :style="{backgroundImage: 'url('+bg+')'}">
-		<view class="movable-view" :class="{active: item.active}" :data-id="item.id" :style="{left: item.left+'px',top: item.top+'px', width: 2*(item.x - item.left)+'px', height: 2*(item.y - item.top)+'px', transform:'scale('+item.scale+') rotate('+item.angle+'deg)'}"
-		 v-for="item in imgs" :key="item.id" @touchstart.stop="handleImgStart" @touchmove.stop="handleImgMove">
-			<image :src="item.url" mode="aspectFit"></image>
-			<view class="rotate-tool iconfont icon-drag" v-show="item.active" :data-id="item.id" :style="{transform:'scale('+ (1/item.scale) +')'}" @touchstart.stop="handleImgTranStart" @touchmove.stop="handleImgTranMove"></view>
-			<view class="rotate-tool iconfont icon-close" v-show="item.active" :data-id="item.id" :style="{transform:'scale('+ (1/item.scale) +')'}" @tap.stop="handleImgClose"></view>
+	<view class="movable-area" @touchmove.prevent.stop @touchstart="handleAreaStart">
+		<view class="movable-view-box" :style="{width: bgWidth + 'px',height:bgHeight+'px'}">
+			<image :src="bg" mode="scaleToFill" class="fit-bg"></image>
+			<view class="movable-view" :class="{active: item.active}" :data-id="item.id" :style="{left: item.left+'px',top: item.top+'px', width: 2*(item.x - item.left)+'px', height: 2*(item.y - item.top)+'px', transform:'scale('+item.scale+') rotate('+item.angle+'deg)'}"
+			 v-for="item in imgs" :key="item.id" @touchstart.stop="handleImgStart" @touchmove.stop="handleImgMove">
+				<image :src="item.url" mode="aspectFit"></image>
+				<view class="rotate-tool iconfont icon-drag" v-show="item.active" :data-id="item.id" :style="{transform:'scale('+ (1/item.scale) +')'}" @touchstart.stop="handleImgTranStart" @touchmove.stop="handleImgTranMove"></view>
+				<view class="rotate-tool iconfont icon-close" v-show="item.active" :data-id="item.id" :style="{transform:'scale('+ (1/item.scale) +')'}" @touchend.stop="handleImgClose"></view>
+			</view>
+			
+			<view class="movable-view" :class="{active: item.active}" :data-id="item.id" :style="{left: item.left+'px',top: item.top+'px', width: (item.width)+'px', height: (item.height)+'px'}"
+			 v-for="item in fonts" :key="item.id" @touchstart.stop="handleFontStart" @touchmove.stop="handleFontMove">
+				<text :style="{fontSize: item.fontSize+'px',lineHeight:item.lineHeight+'px',color:item.color}">{{item.text}}</text>
+				<view class="rotate-tool iconfont icon-drag" v-show="item.active" :data-id="item.id" @touchstart.stop="handleFontScaleStart" @touchmove.stop="handleFontScaleMove"></view>
+				<view class="rotate-tool iconfont icon-editor" v-show="item.active" :data-id="item.id"  @touchend.stop="handleTextTap"></view>
+			</view>
 		</view>
 
-		<view class="movable-view" :class="{active: item.active}" :data-id="item.id" :style="{left: item.left+'px',top: item.top+'px', width: (item.width)+'px', height: (item.height)+'px'}"
-		 v-for="item in fonts" :key="item.id" @touchstart.stop="handleFontStart" @touchmove.stop="handleFontMove">
-			<text :style="{fontSize: item.fontSize+'px',lineHeight:item.lineHeight+'px',color:item.color}">{{item.text}}</text>
-			<view class="rotate-tool iconfont icon-drag" v-show="item.active" :data-id="item.id" @touchstart.stop="handleFontScaleStart" @touchmove.stop="handleFontScaleMove"></view>
-			<view class="rotate-tool iconfont icon-editor" v-show="item.active" :data-id="item.id"  @touchend.stop="handleTextTap"></view>
-		</view>
-
-
-		<button plain class="btn right" @tap="handleDraw">预览</button>
+		<button plain class="btn right" @tap="handleDraw">预览图片</button>
 		<view class="picachu-box" @tap="getImgs">
-			<picachu class="picachu-btn"></picachu>
+			<view class="tietu-wrap">
+				<view class="label">
+					插图
+				</view>
+				<image src="/static/pikachu.png" mode="aspectFill"></image>
+			</view>
 		</view>
-		<button plain class="btn left" @tap="getBackgroundImage">背景</button>
+		<button plain class="btn left" @tap="getBackgroundImage">背景图</button>
 		
 		<popup :animation="true" ref="popup" type="bottom" :maskClick="true">
 			<view class="popup-wrap">
@@ -43,7 +50,6 @@
 			</view>
 		</popup>
 		<colorpicker :isShow="showColorPicker" :bottom="0" @callback="handleColorPicker"></colorpicker>
-		<canvas canvas-id="canvas" :style="{width: ctxWidth+'px',height: ctxHeight+'px'}"></canvas>
 		
 	</view>
 </template>
@@ -51,24 +57,37 @@
 <script>
 	import popup from '@/components/popup/popup.vue'
 	import colorpicker from '@/components/colorpicker/colorpicker.vue'
-	import picachu from '@/pages/movable/pikachu.vue'
 	let index = 0
 	let targetId = 1
 	export default {
-		components: {popup,colorpicker,picachu},
+		components: {popup,colorpicker},
 		data() {
 			return {
 				windowHeight: 0,
+				windowWidth: 0,
 				imgs: [],
 				fonts: [],
 				bg: '',
+				bgWidth: 375,
+				bgHeight: 667,
 				text: '经常会因为某些端的流量不大，就一直拖延无法让那些用户享受到最新服务。另外登陆支付在客户端部分，已经被uni-app统一成一样的api了',
 				color: '#333333',
 				size: 14,
-				showColorPicker: false,
-				ctxWidth: 300,
-				ctxHeight: 225
+				showColorPicker: false
 			};
+		},
+		onLoad() {
+			let system = null
+			if (this.$store.state.system) {
+				system = this.$store.state.system
+			} else {
+				system = uni.getSystemInfoSync()
+			}
+			this.windowWidth = system.windowWidth
+			this.windowHeight = system.windowHeight
+			// #ifdef H5
+			this.windowHeight = system.windowHeight - 44
+			// #endif
 		},
 		methods: {
 			handleAreaStart (e) {
@@ -258,8 +277,7 @@
 			handleImgClose (e) {
 				let items = this.imgs.slice()
 				for (let i = 0; i < items.length; i++) {
-					console.log(e.currentTarget.dataset.id)
-					items[i].active = false;
+               					items[i].active = false;
 					if (e.currentTarget.dataset.id == items[i].id) {
 						items.splice(i, 1)
 					}
@@ -338,7 +356,17 @@
 				})
 			},
 			async getBackgroundImage () {
+				const vx = this
 				const img = await this.chooseImage()
+				const bgRatio = img.height / img.width
+				const ratio = this.windowHeight / this.windowWidth
+				if (bgRatio > ratio) {
+					this.bgHeight = this.windowHeight
+					this.bgWidth = this.windowHeight / bgRatio
+				} else {
+					this.bgWidth = this.windowWidth
+					this.bgHeight = this.windowWidth * bgRatio
+				}
 				this.bg = img.url
 			},
 			async getImgs () {
@@ -372,109 +400,26 @@
 					})
 				})
 			},
-			pathToDataUrl (url) {
-				return new Promise((resolve, reject) => {
-					const path = url
-					console.log(path, 'qqq')
-					// #ifdef MP-WEIXIN
-					uni.compressImage({
-						src: path,
-						quality: 30,
-						success: function (res) {
-							const FileMg = wx.getFileSystemManager()
-							FileMg.readFile({
-								filePath: res.tempFilePath,
-								encoding:'base64',
-								success:(res) => {
-									resolve('data:image/jpeg;base64,'+res.data)
-								},
-								fail: function (err) {
-									reject(err)
-								}
-							})
-						}, 
-						fail: function (err) {
-							reject(err)
-						}
+			handleDraw() {
+				if (!this.bg) {
+					this.$gd.uniToast({
+						title: '请先选择一张背景图',
+						icon: 'none'
 					})
-					// #endif
-				})
-			},
-			async handleDraw() {
-				const vx = this
-				let imgs = this.imgs.slice()
-				let n = 0
-				let len = imgs.length
-				let imgLists = []
-				vx.ctxHeight = vx.$store.state.system.windowHeight
-				vx.ctxWidth = vx.$store.state.system.windowWidth
-				vx.canvasDrawData({
-					global: {
-						width: vx.$store.state.system.windowWidth,
-						height: vx.$store.state.system.windowHeight,
-						url: vx.bg
-					},
-					imgs: vx.imgs,
-					fonts: vx.fonts
-				})
-				// imgs.forEach(async (item, index) => {
-				// 	let ele = JSON.parse(JSON.stringify(item))
-				// 	ele.url = await vx.pathToDataUrl(ele.url)
-				// 	imgLists.push(ele)
-				// 	n++
-				// 	if (n === len) {
-				// 		const globalBg = await this.pathToDataUrl(this.bg)
-				// 		vx.ctxHeight = vx.$store.state.system.windowHeight
-				// 		vx.ctxWidth = vx.$store.state.system.windowWidth
-				// 		vx.canvasDrawData({
-				// 			global: {
-				// 				width: vx.$store.state.system.windowWidth,
-				// 				height: vx.$store.state.system.windowHeight,
-				// 				url: globalBg
-				// 			},
-				// 			imgs: imgLists,
-				// 			fonts: vx.fonts
-				// 		})
-				// 		// vx.$gd.uniRequest({
-				// 		// 	url: 'cornucopia/draw',
-				// 		// 	isGet: false,
-				// 		// 	data: {
-				// 		// 		drawData: {
-				// 		// 			global: {
-				// 		// 				width: vx.$store.state.system.windowWidth,
-				// 		// 				height: vx.$store.state.system.windowHeight,
-				// 		// 				url: globalBg
-				// 		// 			},
-				// 		// 			imgs: imgLists,
-				// 		// 			fonts: vx.fonts
-				// 		// 		}
-				// 		// 	}
-				// 		// })
-				// 	}
-				// })
-			},
-			canvasDrawData (data) {
-				const vx = this
-				const ctx = uni.createCanvasContext('canvas')
-				this.$gd.drawjs(ctx, data)
-				.then(ctx =>{
-					ctx.draw()
-					uni.canvasToTempFilePath({
-						canvasId: 'canvas',
-						success: function (res) {
-							vx.pathToDataUrl(res.tempFilePath)
-							.then(data => {
-								console.log(data, 'img')
-							}).catch(err => console.log(err))
+				} else {
+					this.$store.commit('setPreviewInfo', {
+						global: {
+							width: this.bgWidth,
+							height: this.bgHeight,
+							url: this.bg
 						},
-						fail: function (err) {
-							console.log(err)
-						},
-						complete: function (r) {
-							console.log(r, 'r')
-						}
+						imgs: this.imgs,
+						fonts: this.fonts
 					})
-				})
+					uni.navigateTo({
+						url: '/pages/puzzle/canvas/canvas'
+					})
+				}
 			}
 		}
 	}
@@ -484,13 +429,32 @@
 	.movable-area {
 		width: 100vw;
 		height: 100vh;
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: 100% 100%;
+		background-color: #EFEFEF;
 		overflow: hidden;
-
+		/* #ifdef H5 */
+		height: calc(100vh - 44px);
+		/* #endif */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.movable-view-box {
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: 100% 100%;
+			position: relative;
+			z-index: 0;
+			> .fit-bg {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 1;
+			}
+		}
 		.movable-view {
 			position: absolute;
+			z-index: 2;
 			&.active {
 				&::after {
 					content: '';
@@ -499,7 +463,7 @@
 					left: 0;
 					width: 100%;
 					height: 100%;
-					border: 1rpx solid #4a4a4a;
+					border: 1rpx solid #E5E5E5;
 				}
 			}
 
@@ -509,7 +473,7 @@
 				height: 20px;
 				font-size: 20px;
 				color: #4a4a4a;
-				z-index: 2;
+				z-index: 3;
 				&.icon-drag {
 					bottom: -10px;
 					right: -10px;
@@ -533,25 +497,56 @@
 			}
 		}
 		.picachu-box {
-			width: 80px;
-			height: 80px;
+			// width: 80px;
+			// height: 80px;
 			position: absolute;
 			bottom: 0rpx;
 			left: 50%;
 			transform: translateX(-50%);
-			border: none;
-			border-radius: 50%;
-			box-shadow: 0 0 5px 3px rgba(0,0,0,0.1);
+			// border: none;
+			// border-radius: 50%;
+			// box-shadow: 0 0 5px 3px rgba(0,0,0,0.1);
 			.picachu-btn{
 				position: absolute;
 				top: 0;
 				left: 0;
-				width: 100%;
-				height: 100%;
 				.picachu-container {
 					transform: scale(0.17);
 					left: -185px;
 					top: -185px;
+				}
+			}
+			.tietu-wrap {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				.label {
+					width: 80rpx;
+					height: 40rpx;
+					background-color: #009480;
+					color: #fff;
+					position: relative;
+					border-radius: 20rpx;
+					text-align: center;
+					font-size: 24rpx;
+					line-height: 40rpx;
+					margin-bottom: -15rpx;
+					margin-left: 60rpx;
+					&::before {
+						content: '';
+						width: 0;
+						height: 0;
+						border: 10rpx solid;
+						position: absolute;
+						bottom: -13rpx;
+						left: 10rpx;
+						border-color: #009480 transparent transparent;
+					}
+				}
+				> image {
+					width: 150px;
+					height: 80px;
 				}
 			}
 		}
@@ -566,8 +561,8 @@
 			overflow: hidden;
 			background-color: rgba(255,255,255,0.6);
 			line-height: 70rpx;
-			color: #FF3A30;
-			font-size: 32rpx;
+			color: #009480;
+			font-size: 30rpx;
 			box-shadow: 0 0 5px 3px rgba(0,0,0,0.1);
 			&.right {
 				right: 30rpx;

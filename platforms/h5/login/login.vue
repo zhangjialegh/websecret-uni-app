@@ -3,9 +3,9 @@
 		<view class='section'>
 			<view class='logo-wrapper'>
 				<view class='logo-box'>
-					<image src='../../static/logo.jpeg'></image>
+					<image src='/static/logo.png'></image>
 				</view>
-				<text class='app-name'>网密</text>
+				<text class='app-name'>青云器</text>
 			</view>
 
 			<view class="login-box">
@@ -20,7 +20,7 @@
 
 			<view class='qrcode-box'>
 				<text>扫描小程序，获取登录码</text>
-				<image @tap="previewImage" mode="aspectFit" src='../../static/websecret.png'></image>
+				<image @tap="previewImage" mode="aspectFit" src='/static/websecret.png'></image>
 			</view>
 		</view>
 	</view>

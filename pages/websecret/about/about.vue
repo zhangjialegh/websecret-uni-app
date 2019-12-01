@@ -3,7 +3,7 @@
 		<view class='section'>
 			<view class='logo-wrapper'>
 				<view class='logo-box'>
-					<image src='../../static/logo.jpeg'></image>
+					<image src='/static/websecret.png'></image>
 				</view>
 				<text class='app-name'>网密</text>
 			</view>
@@ -61,8 +61,8 @@
 		margin-bottom: 15rpx;
 	}
 	.logo-box>image {
-		width: 90%;
-		height: 90%;
+		width: 60%;
+		height: 60%;
 	}
 	.title-1 {
 		border-left: 8rpx solid var(--base-color);

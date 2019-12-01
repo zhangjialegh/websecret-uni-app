@@ -10,7 +10,8 @@ const store = new Vuex.Store({
 		query: {},
 		path: '',
 		system: null,
-		scene: ''
+		scene: '',
+		previewInfo: {}
 	},
 	mutations: {
 		setUserInfo (state, payload) {
@@ -31,6 +32,9 @@ const store = new Vuex.Store({
 		setScene (state, payload) {
 			state.scene = payload
 		},
+		setPreviewInfo (state, payload) {
+			state.previewInfo = payload
+		}
 	}
 })
 

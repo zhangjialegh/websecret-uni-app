@@ -1,5 +1,5 @@
 {
-    "name" : "网密",
+    "name" : "青云器",
     "appid" : "__UNI__DA00CC3",
     "description" : "应用描述",
     "versionName" : "1.0.0",
@@ -89,7 +89,11 @@
             "postcss" : true
         },
         "usingComponents" : true,
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "需要获取你的位置来获取天气信息"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -113,7 +117,7 @@
                 }
             }
         },
-        "title" : "网密",
+        "title" : "青云器",
         "optimization" : {
             "treeShaking" : {
                 "enable" : true

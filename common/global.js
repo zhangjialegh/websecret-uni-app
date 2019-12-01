@@ -89,11 +89,11 @@ export default {
 					})
 				})
 			},
-			uniAll: function(objs) { //Promise.all
+			uniAll: function(objs, options) { //Promise.all
 				const vx = Vue.gd
 				const token = Vue.store.state.accessToken || uni.getStorageSync(OPT.key) || ''
 				// 如果还未登录，需要登录后再执行
-				if (token) {
+				if (token || (options && options.notAuth === true)) {
 					return Promise.all(objs.map(item => {
 						return vx.uniFetch(item)
 					}))
@@ -120,8 +120,10 @@ export default {
 					// #ifdef H5
 					check = '1'
 					// #endif
+					const outerApi = obj.url.includes('https') // 判断是否调用外部api
+					const api_url = outerApi ? obj.url : (OPT.api + '/v2api/' + obj.url)
 					uni.request({
-						url: OPT.api + '/v2api/' + obj.url,
+						url: api_url,
 						method: obj.isGet ? 'get' : 'post',
 						header: {
 							'content-type': 'application/json',
@@ -132,7 +134,9 @@ export default {
 						},
 						data: obj.data,
 						success: function(result) {
-							if (result.statusCode == 200) {
+							if (outerApi) {
+								resolve(result.data)
+							} else if (result.statusCode == 200) {
 								if (result.data.success) {
 									resolve(result.data)
 								} else {
@@ -156,7 +160,7 @@ export default {
 			},
 			uniRequest: function(obj) {
 				const vx = Vue.gd
-				const token = Vue.store.state.accessToken || ''
+				const token = Vue.store.state.accessToken || uni.getStorageSync(OPT.key) || ''
 				// 如果还未登录，需要登录后再执行
 				// #ifdef H5
 				return new Promise((resolve, reject) => {
@@ -199,17 +203,23 @@ export default {
 				// #ifdef H5
 				if (data.statusCode === 401) {
 					uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/platforms/h5/login/login'
 					})
 					return
 				}
 				// #endif
-				uni.showModal({
-					content: data.message || (data.data && data.data.message) || '网络不给力，点击确定重试',
-					showCancel: false,
-					confirmText: '知道了',
-					confirmColor: '#28D4A1'
-				})
+				if (data.statusCode !== 401) {
+					uni.showModal({
+						content: data.message || (data.data && data.data.message) || '网络不给力，点击确定重试',
+						showCancel: false,
+						confirmText: '知道了',
+						confirmColor: '#28D4A1'
+					})
+				} else {
+					Vue.store.commit('setUserInfo', null)
+					Vue.store.commit('setAccessToken', '')
+					uni.removeStorage({key:OPT.key})
+				}
 			},
 			loginSuccess: function(data) {
 				Vue.store.commit('setUserInfo', data)
@@ -217,7 +227,7 @@ export default {
 				uni.setStorageSync(OPT.key, data.third_session)
 			},
 			uniModal: function({
-				title = '',
+				title = '提示',
 				content,
 				showCancel = false,
 				confirmText = '知道了',
