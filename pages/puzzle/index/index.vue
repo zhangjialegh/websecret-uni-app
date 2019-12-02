@@ -50,7 +50,7 @@
 					<view class="iconfont icon-close" @tap="handleCloseMask"></view>
 				</view>
 				<view class="popup-textarea">
-					<textarea :value="text" :style="{'fontSize': size + 'px', color: color}" placeholder="请输入内容" :fixed="true" @input="handleInput"/>
+					<textarea v-show="!showColorPicker" :value="text" :style="{'fontSize': size + 'px', color: color}" placeholder="请输入内容" :fixed="true" @input="handleInput"/>
 				</view>
 				<view class="popup-bottom">
 					<view class="color-box" @tap="handleShowColorPicker">
