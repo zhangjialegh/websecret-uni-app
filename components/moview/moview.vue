@@ -1,55 +1,55 @@
 <template>
-	<view class="move-wrapper" v-if="show" @tap='goAbout' @longtap='handlelongtap'>
-	  <view class='move-box'>
-	    <view class='iconfont icon-about'></view>
-	  </view>
-	</view>
+  <view class="move-wrapper" v-if="show" @tap="goAbout">
+    <view class="move-box">
+      <view class="iconfont icon-about"></view>
+    </view>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				show: false,
-				taplock: false
-			};
-		},
-		created () {
-			const closeMove = uni.getStorageSync('closeMove')
-			if(closeMove) return
-			this.show = true
-		},
-		methods: {
-		    goAbout() {
-		      if (this.taplock) {
-		        this.taplock = false
-		        return
-		      }
-		      uni.navigateTo({
-		        url: '/pages/about/about'
-		      })
-		    },
-		    handlelongtap() {
-		      const vx = this
-		      this.taplock = true
-		      uni.showActionSheet({
-		        itemList: ['删除'],
-		        success(res) {
-		          if (res.tapIndex == 0) {
-		            vx.deleteCard()
-		          }
-		        }
-		      })
-		    },
-		    deleteCard() {
-		      this.show = false
-		      uni.setStorage({
-		        key: 'closeMove',
-		        data: true
-		      })
-		    }
-		}
-	}
+export default {
+  data() {
+    return {
+      show: false,
+      taplock: false
+    };
+  },
+  created() {
+    const closeMove = uni.getStorageSync("closeMove");
+    if (closeMove) return;
+    this.show = true;
+  },
+  methods: {
+    goAbout() {
+      if (this.taplock) {
+        this.taplock = false;
+        return;
+      }
+      uni.navigateTo({
+        url: "/pages/websecret/about/about"
+      });
+    },
+    handlelongtap() {
+      const vx = this;
+      this.taplock = true;
+      uni.showActionSheet({
+        itemList: ["删除"],
+        success(res) {
+          if (res.tapIndex == 0) {
+            vx.deleteCard();
+          }
+        }
+      });
+    },
+    deleteCard() {
+      this.show = false;
+      uni.setStorage({
+        key: "closeMove",
+        data: true
+      });
+    }
+  }
+};
 </script>
 
 <style>
