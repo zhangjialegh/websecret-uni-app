@@ -15,7 +15,7 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
       if (idx == 1) {
         idx = 2;
       }
-      context.fillText(words.slice(0, idx - 1).join(''), x, y + (lineHeight * currentLine));
+      context.fillText(words.slice(0, idx - 1).join(''), x, y + (lineHeight * (currentLine + 0.5)));
       currentLine++;
       words = words.splice(idx - 1);
       idx = 1;
@@ -24,7 +24,7 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
     }
   }
   if (idx > 0)
-    context.fillText(words.join(''), x, y + (lineHeight * currentLine));
+    context.fillText(words.join(''), x, y + (lineHeight * (currentLine + 0.5)));
 }
 
 function loadImage (url) {
@@ -89,6 +89,7 @@ exports.drawjs = (ctx, drawData) => {
         ctx.save()
         ctx.font = `${item.fontSize || 14}px ${item.fontFamily || 'Roboto Mono'}`
         ctx.fillStyle = `${item.fillStyle || item.color || '#333333'}`
+		ctx.textBaseline = 'middle'
         printAtWordWrap(ctx, item.text, item.left, item.top, item.lineHeight, item.width)
         ctx.restore()
         if (n === len - 1) {

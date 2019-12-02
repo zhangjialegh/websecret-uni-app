@@ -1,8 +1,9 @@
 <template>
-	<canvas canvas-id="canvas" :style="{width: ctxWidth+'px',height: ctxHeight+'px'}">
+	<view class="canvas-box">
+		<canvas canvas-id="canvas" :style="{width: ctxWidth+'px',height: ctxHeight+'px'}"></canvas>
 		<cover-view class="preview_btn left" @tap="handleBack">继续编辑</cover-view>
 		<cover-view class="preview_btn right" @tap="handleFinish">保存图片</cover-view>
-	</canvas>
+	</view>
 </template>
 
 <script>
@@ -15,19 +16,11 @@
 			};
 		},
 		onLoad() {
-			let system = null
-			if (this.$store.state.system) {
-				system = this.$store.state.system
-			} else {
-				system = uni.getSystemInfoSync()
-			}
-			this.ctxWidth = system.windowWidth
-			this.ctxHeight = system.windowHeight
-			// #ifdef H5
-			this.ctxHeight = system.windowHeight - 44
-			// #endif
+			const previewInfo = this.$store.state.previewInfo
+			this.ctxWidth = previewInfo.global.width
+			this.ctxHeight = previewInfo.global.height
 		},
-		mounted() {
+		onReady() {
 			this.canvasDrawData(this.$store.state.previewInfo)
 		},
 		methods: {
@@ -113,6 +106,16 @@
 </script>
 
 <style lang="scss" scoped>
+	.canvas-box {
+		width: 100vw;
+		height: 100vh;
+		/* #ifdef H5 */
+		height: calc(100vh - 44px);
+		/* #endif */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.preview_btn {
 		width: 180rpx;
 		height: 70rpx;

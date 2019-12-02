@@ -16,9 +16,9 @@
 		position: relative;
 		overflow: hidden;
 		width: 100%;
-		border-radius: 15rpx;
 		animation: sky_background 50s ease-out infinite;
 		transform: translate3d(0,0,0);
+		opacity: 0.2;
 	}
 	@keyframes sky_background {
 		0% {
@@ -26,7 +26,7 @@
 			color: #007FD5;
 		}
 		50% {
-			background-color: #6fc1f9;
+			background-color: #000000;
 			color: #a3d9ff;
 		}
 		100% {
@@ -41,7 +41,7 @@
 		height: 100%;
 		width: 300%;
 		transform: translate3d(0,0,0);
-		background-position: 0 20%;
+		/* background-position: 0 20%; */
 	}
     .clouds_one {
 		animation: cloud_one 50s linear infinite;

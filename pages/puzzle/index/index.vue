@@ -1,7 +1,13 @@
 <template>
-	<view class="movable-area" @touchmove.prevent.stop @touchstart="handleAreaStart">
+	<view class="movable-area" @touchmove.stop.prevent @touchstart="handleAreaStart">
+
+		<!-- 图片组合区域 -->
 		<view class="movable-view-box" :style="{width: bgWidth + 'px',height:bgHeight+'px'}">
-			<image :src="bg" mode="scaleToFill" class="fit-bg"></image>
+			<view class="bg-notice-text">
+				<view>点击添加背景图片</view>
+			</view>
+			<image :src="bg" mode="scaleToFill" class="fit-bg" v-if="bg"></image>
+			<image mode="scaleToFill" class="fit-bg" v-if="!bg" @tap="getBackgroundImage"></image>
 			<view class="movable-view" :class="{active: item.active}" :data-id="item.id" :style="{left: item.left+'px',top: item.top+'px', width: 2*(item.x - item.left)+'px', height: 2*(item.y - item.top)+'px', transform:'scale('+item.scale+') rotate('+item.angle+'deg)'}"
 			 v-for="item in imgs" :key="item.id" @touchstart.stop="handleImgStart" @touchmove.stop="handleImgMove">
 				<image :src="item.url" mode="aspectFit"></image>
@@ -13,10 +19,13 @@
 			 v-for="item in fonts" :key="item.id" @touchstart.stop="handleFontStart" @touchmove.stop="handleFontMove">
 				<text :style="{fontSize: item.fontSize+'px',lineHeight:item.lineHeight+'px',color:item.color}">{{item.text}}</text>
 				<view class="rotate-tool iconfont icon-drag" v-show="item.active" :data-id="item.id" @touchstart.stop="handleFontScaleStart" @touchmove.stop="handleFontScaleMove"></view>
-				<view class="rotate-tool iconfont icon-editor" v-show="item.active" :data-id="item.id"  @touchend.stop="handleTextTap"></view>
+				<view class="rotate-tool iconfont icon-editor" v-show="item.active" :data-id="item.id"  @touchend.stop="editFonts"></view>
+				<view class="rotate-tool iconfont icon-close" v-show="item.active" :data-id="item.id" @touchend.stop="handleFontClose"></view>
 			</view>
 		</view>
 
+
+         <!-- 底部按钮 -->
 		<button plain class="btn right" @tap="handleDraw">预览图片</button>
 		<view class="picachu-box" @tap="getImgs">
 			<view class="tietu-wrap">
@@ -26,8 +35,15 @@
 				<image src="/static/pikachu.png" mode="aspectFill"></image>
 			</view>
 		</view>
-		<button plain class="btn left" @tap="getBackgroundImage">背景图</button>
+		<button plain class="btn left" @tap="getFonts">加文字</button>
+		<view class="replace-pic-box" @tap="getBackgroundImage" v-if="bg">
+			<view class="tupian-box">
+				<view class="iconfont icon-pic"></view>
+			</view>
+			<view class="iconfont icon-turn"></view>
+		</view>
 		
+		<!-- 文本编辑弹框 -->
 		<popup :animation="true" ref="popup" type="bottom" :maskClick="true">
 			<view class="popup-wrap">
 				<view class="popup-top">
@@ -44,12 +60,14 @@
 						<slider :max="24" :min="12" :step="1" :value="size" :block-size="16" :show-value="true" @change="handleSlider"/>
 					</view>
 					<view class="btn-box">
-						<button plain class="popup-btn" @tap="handleTextEdit">确定</button>
+						<button plain class="popup-btn" @tap="handleTextSure">确定</button>
 					</view>
 				</view>
 			</view>
 		</popup>
-		<colorpicker :isShow="showColorPicker" :bottom="0" @callback="handleColorPicker"></colorpicker>
+		
+		<!-- 颜色选取弹框 -->
+		<colorpicker :defaultColor="color" :isShow="showColorPicker" :bottom="0" @callback="handleColorPicker"></colorpicker>
 		
 	</view>
 </template>
@@ -59,6 +77,8 @@
 	import colorpicker from '@/components/colorpicker/colorpicker.vue'
 	let index = 0
 	let targetId = 1
+	const defaultColor = '#333333'
+	const defaultSize = 14
 	export default {
 		components: {popup,colorpicker},
 		data() {
@@ -70,10 +90,11 @@
 				bg: '',
 				bgWidth: 375,
 				bgHeight: 667,
-				text: '经常会因为某些端的流量不大，就一直拖延无法让那些用户享受到最新服务。另外登陆支付在客户端部分，已经被uni-app统一成一样的api了',
-				color: '#333333',
-				size: 14,
-				showColorPicker: false
+				text: '',
+				color: defaultColor,
+				size: defaultSize,
+				showColorPicker: false,
+				checkAddFont: false
 			};
 		},
 		onLoad() {
@@ -284,21 +305,61 @@
 				}
 				this.imgs = items
 			},
-			handleTextTap (e) {
+			editFonts (e) {
 				let items = this.fonts.slice()
 				for (let i = 0; i < items.length; i++) {
 					items[i].active = false;
 					if (e.currentTarget.dataset.id == items[i].id) {
 						index = i
-						items[index].active = true
-						this.text = items[index].text
+						console.log(items[i] ,'item')
+						items[i].active = true
+						this.text = items[i].text
+						this.color = items[i].color
+						this.size = items[i].fontSize
 					}
 				}
-				console.log(this.text, this.$refs.popup, 'tt')
+				console.log(this.color, this.size, this.text, e, 'edit')
 				this.$refs.popup.open()
+			},
+			handleFontClose (e) {
+				let items = this.fonts.slice()
+				for (let i = 0; i < items.length; i++) {
+								items[i].active = false;
+					if (e.currentTarget.dataset.id == items[i].id) {
+						items.splice(i, 1)
+					}
+				}
+				this.fonts = items
 			},
 			handleInput (e) {
 				this.text = e.detail.value
+			},
+			handleTextSure () {
+				if(!this.text.trim()) {
+					this.$gd.uniToast({
+						title: '内容不能为空'
+					})
+					return
+				}
+				if (this.checkAddFont) {
+					this.addFonts({
+						size: this.size,
+						color: this.color,
+						text: this.text
+					})
+				} else {
+					let items = this.fonts.slice()
+					items[index].active = true
+					items[index].fontSize = this.size
+					items[index].lineHeight = 1.5*this.size
+					items[index].color = this.color
+					items[index].text = this.text
+					this.fonts = items
+				}
+				this.handleCloseMask()
+			},
+			handleCloseMask () {
+				this.$refs.popup.close()
 			},
 			handleShowColorPicker () {
 				this.showColorPicker = true
@@ -312,18 +373,6 @@
 			},
 			handleSlider (e) {
 				this.size = e.detail.value
-			},
-			handleTextEdit () {
-				let items = this.fonts.slice()
-				items[index].active = true
-				items[index].fontSize = this.size
-				items[index].lineHeight = 1.5*this.size
-				items[index].color = this.color
-				this.fonts = items
-				this.handleCloseMask()
-			},
-			handleCloseMask () {
-				this.$refs.popup.close()
 			},
 			addImgs (img) {
 				this.imgs.push({
@@ -341,19 +390,20 @@
 					active: false
 				})
 			},
-			addFonts (text) {
+			addFonts (font) {
 				this.fonts.push({
 					id: targetId++,
 					top: 0,
 					left: 0,
-					width: 100,
-					height: 100,
-					lineHeight: 14*1.5,
-					fontSize: 14,
-					color: '#333333',
-					text: text,
+					width: 120,
+					height: 120,
+					lineHeight: (font.size || defaultSize)*1.5,
+					fontSize: font.size || defaultSize,
+					color: font.color || defaultColor,
+					text: font.text,
 					active: false
 				})
+				this.checkAddFont = false
 			},
 			async getBackgroundImage () {
 				const vx = this
@@ -372,6 +422,13 @@
 			async getImgs () {
 				const img = await this.chooseImage()
 				this.addImgs(img)
+			},
+			getFonts () {
+				this.color = defaultColor
+				this.size = defaultSize
+				this.text = ''
+				this.checkAddFont = true
+				this.$refs.popup.open()
 			},
 			chooseImage () {
 				return new Promise((resolve, reject) => {
@@ -443,6 +500,22 @@
 			background-size: 100% 100%;
 			position: relative;
 			z-index: 0;
+			> .bg-notice-text {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				> view {
+					padding: 30rpx;
+					border: 1px solid #E0E0E0;
+					color: #C0C0C0;
+				}
+			}
 			> .fit-bg {
 				width: 100%;
 				height: 100%;
@@ -478,9 +551,13 @@
 					bottom: -10px;
 					right: -10px;
 				}
-				&.icon-close, &.icon-editor {
+				&.icon-close {
 					top: -10px;
 					left: -10px;
+				}
+				&.icon-editor {
+					top: -10px;
+					right: -10px;
 				}
 			}
 
@@ -494,6 +571,39 @@
 				width: 100%;
 				height: 100%;
 				overflow: hidden;
+			}
+		}
+		.replace-pic-box {
+			width: 80rpx;
+			height: 80rpx;
+			position: absolute;
+			top: 30rpx;
+			right: 30rpx;
+			> .tupian-box {
+				width: 100%;
+				height: 100%;
+				border-radius: 40rpx;
+				overflow: hidden;
+				background-color: rgba(255,255,255,0.6);
+				line-height: 70rpx;
+				color: #009480;
+				box-shadow: 0 0 5px 3px rgba(0,0,0,0.1);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				> .icon-pic {
+					font-size: 30px;
+				}
+			}
+			> .icon-turn {
+				position: absolute;
+				bottom: -5rpx;
+				right: 0;
+				color: #009480;
+				font-weight: bold;
+				font-size: 16px;
+				background-color: #fff;
+				border-radius: 50%;
 			}
 		}
 		.picachu-box {
@@ -531,8 +641,8 @@
 					text-align: center;
 					font-size: 24rpx;
 					line-height: 40rpx;
-					margin-bottom: -15rpx;
-					margin-left: 60rpx;
+					margin-bottom: 15rpx;
+					margin-left: 10rpx;
 					&::before {
 						content: '';
 						width: 0;
@@ -541,12 +651,14 @@
 						position: absolute;
 						bottom: -13rpx;
 						left: 10rpx;
+						left: 50%;
+						transform: translateX(-50%);
 						border-color: #009480 transparent transparent;
 					}
 				}
 				> image {
-					width: 150px;
-					height: 80px;
+					width: 120px;
+					height: 40px;
 				}
 			}
 		}
