@@ -107,15 +107,20 @@
 		<!--  定位地址  -->
 		<area-picker :show="show" :animation="animated" :provinces="provinces" :citys="citys" :countys="countys" :value="value"
 		 @hidden="hiddenFloatView" @change="bindChange"></area-picker>
+		 
+		 <!-- 加载组件 -->
+		 <loadingpage :show="isLoading"></loadingpage>
 	</view>
 </template>
 
 <script>
 	import model from '@/common/area.js'
 	import areaPicker from '@/pages/weather/area.vue'
+	import loadingpage from '@/components/loadingpage/loadingpage.vue'
 	export default {
 		components: {
-			areaPicker
+			areaPicker,
+			loadingpage
 		},
 		data() {
 			return {
@@ -126,6 +131,7 @@
 				countys: [],
 				value: [0, 0, 0],
 				my: "未知",
+				isLoading: true,
 				liveweather: {
 				
 				},
@@ -151,9 +157,6 @@
 		methods: {
 			init() {
 				const vx = this;
-				uni.showLoading({
-					title: '加载中',
-				});
 				// #ifndef H5
 				uni.getLocation({
 					type: 'wgs84',
@@ -191,12 +194,12 @@
 				}], {
 					notAuth: true
 				}).then(res => {
-					uni.hideLoading()
+					vx.isLoading = false
 					const my = res[0].data.HeWeather6[0].basic.admin_area + " " + res[0].data.HeWeather6[0].basic.parent_city + " " + res[0].data.HeWeather6[0].basic.location
 					vx.my = my
 					vx.liveweather = res[0].data.HeWeather6[0].now
 					vx.three = res[1].data.HeWeather6[0].daily_forecast
-				}).catch(() => uni.hideLoading())
+				}).catch(() => vx.isLoading = false)
 			},
 			//点击选择城市按钮显示picker-view
 			translate: function(e) {
