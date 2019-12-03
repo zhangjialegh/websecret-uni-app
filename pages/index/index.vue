@@ -42,6 +42,7 @@
 			return {
 				gridsData: [{
 					title: '实用工具',
+					id: 1,
 					lists: [{
 						path: '/pages/websecret/index/index',
 						text: '网密',
@@ -58,16 +59,11 @@
 						image: '/static/weather.png',
 						backgroundImage: ''
 					}]
-				}, {
-					title: '休闲娱乐',
-					lists: [{
-						path: '/pages/2048/2048',
-						text: '2048',
-						image: '/static/2048.jpg',
-						backgroundImage: ''
-					}, {}, {}]
 				}]
 			}
+		},
+		onLoad() {
+			this.getAllCategory()
 		},
 		methods: {
 			navigate(e) {
@@ -79,6 +75,28 @@
 						url: path
 					})
 				}
+			},
+			getAllCategory() {
+				const vx = this
+				const gridsData = this.gridsData.slice()
+				this.$gd.uniRequest({
+					url: 'cornucopia/congar',
+					isGet: true,
+					notAuth: true
+				}).then(res => {
+					if (res.data.length) {
+						res.data.forEach(item => {
+							gridsData.forEach(grid => {
+								if (grid.id === item.id) {
+									grid.lists.push(...item.lists)
+								} else {
+									gridsData.push(item)
+								}
+							})
+						})
+						vx.gridsData = gridsData
+					}
+				})
 			}
 		}
 	}
