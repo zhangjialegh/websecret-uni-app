@@ -27,7 +27,7 @@
 			pathToDataUrl(url) {
 				return new Promise((resolve, reject) => {
 					const path = url
-					// #ifdef MP-WEIXIN || MP-ALIPAY || MP-TOUTIAO
+					// #ifdef MP-WEIXIN || MP-TOUTIAO
 					uni.compressImage({
 						src: path,
 						quality: 100,

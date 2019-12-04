@@ -2,23 +2,30 @@ const md5 = require('@/widget/md5.js')
 const {drawjs} = require('@/common/draw.js')
 const {areaInfo} = require('@/common/area.js')
 
+function formatNumber(n) {
+	n = n.toString()
+	return n[1] ? n : '0' + n
+}
+function formatTime(date) {
+	date = new Date(date)
+	const year = date.getFullYear()
+	const month = date.getMonth() + 1
+	const day = date.getDate()
+	const hour = date.getHours()
+	const minute = date.getMinutes()
+	const second = date.getSeconds()
+	return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber)
+		.join(
+			':')
+}
+
+function isValid(item) {
+	return item != undefined && item !== '';
+}
+
 module.exports = {
-	formatTime: date => {
-		date = new Date(date)
-		const year = date.getFullYear()
-		const month = date.getMonth() + 1
-		const day = date.getDate()
-		const hour = date.getHours()
-		const minute = date.getMinutes()
-		const second = date.getSeconds()
-		return [year, month, day].map(Vue.gd.formatNumber).join('/') + ' ' + [hour, minute, second].map(Vue.gd.formatNumber)
-			.join(
-				':')
-	},
-	formatNumber: n => {
-		n = n.toString()
-		return n[1] ? n : '0' + n
-	},
+	formatTime: formatTime,
+	formatNumber: formatNumber,
 	unionQuery: obj => {
 		let str = ''
 		const array = Object.keys(obj)
@@ -49,7 +56,7 @@ module.exports = {
 		const year = date.getFullYear()
 		const month = date.getMonth() + 1
 		const day = date.getDate()
-		return [month, day, year].map(Vue.gd.formatNumber).join('/')
+		return [month, day, year].map(formatNumber).join('/')
 	},
 	checkPlatform: info => {
 		const {
@@ -79,7 +86,7 @@ module.exports = {
 		const STR2 = 'secret';
 		const STR3 = 'websecret31302991jkharry';
 		const Num = 16
-		if (Vue.gd.isValid(password) && Vue.gd.isValid(codeword)) {
+		if (isValid(password) && isValid(codeword)) {
 			let md5one = md5(password, codeword);
 			let md5two = md5(md5one, STR1);
 			let md5three = md5(md5one, STR2);
@@ -107,9 +114,7 @@ module.exports = {
 			return false
 		}
 	},
-	isValid: (item) => {
-		return item != undefined && item !== '';
-	},
+	isValid: isValid,
 	checkEmail: (str) => {
 		const szReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
 		return szReg.test(str)
@@ -122,7 +127,7 @@ module.exports = {
 		if (mins < 60) {
 			return mins + '分钟前'
 		} else if (hours >= 24) {
-			return Vue.gd.formatTime(date)
+			return formatTime(date)
 		} else {
 			return hours + '小时前'
 		}

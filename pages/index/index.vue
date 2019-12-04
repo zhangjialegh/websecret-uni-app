@@ -76,17 +76,66 @@
 					})
 				}
 			},
+			testOcr() {
+				const vx = this
+				uni.chooseImage({
+					count:1,
+					sizeType: ['compressed'],
+					success(res) {
+						const File = uni.getFileSystemManager()
+						File.readFile({
+							filePath: res.tempFilePaths[0],
+							encoding: 'base64',
+							success(res) {
+								let base64 = res.data
+								let stmp = parseInt(new Date().getTime() / 1000)
+								let str = `app_id=2125164668&card_type=0&image=${encodeURIComponent(base64)}&nonce_str=${encodeURIComponent('fa577cg340859f9fg')}&time_stamp=${stmp}&app_key=6ywDMBrBQi1EF0CH`
+								let sign =vx.$gd.md5(str).toUpperCase()
+								uni.request({
+									url: 'https://api.ai.qq.com/fcgi-bin/ocr/ocr_idcardocr',
+									method: 'POST',
+									header: {
+										'content-type': 'application/x-www-form-urlencoded'
+									},
+									data: {
+										app_id: 2125164668,
+										card_type: 0,
+										image: base64,
+										nonce_str: 'fa577cg340859f9fg',
+										time_stamp: stmp,
+										sign: sign
+									},
+									success(res) {
+										const info = res.data
+										if (info.msg === 'ok') {
+											
+										}
+									}
+								})
+							}
+						})
+					}
+				})
+			},
 			getAllCategory() {
 				const vx = this
 				const gridsData = this.gridsData.slice()
+				let platform = ''
+				// #ifdef H5
+				platform = 'H5'
+				// #endif
+				
 				this.$gd.uniRequest({
 					url: 'cornucopia/congar',
 					isGet: true,
+					data: {
+						platform
+					},
 					notAuth: true
 				}).then(res => {
 					if (res.data.length) {
-						res.data.forEach(item => {
-							gridsData.forEach(grid => {
+						gridsData.forEach(grid => {
+							res.data.forEach(item => {
 								if (grid.id === item.id) {
 									grid.lists.push(...item.lists)
 								} else {
