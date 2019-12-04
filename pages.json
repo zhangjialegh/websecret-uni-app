@@ -82,6 +82,10 @@
 				"backgroundColor": "#776e65"
 			}
         }
+        ,{
+            "path" : "pages/turntable/turntable",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

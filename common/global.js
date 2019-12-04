@@ -255,7 +255,7 @@ export default {
 			},
 			uniToast: function({
 				title = '',
-				icon = 'success',
+				icon = 'none',
 				image = '',
 				duration = 1000,
 				mask = false,

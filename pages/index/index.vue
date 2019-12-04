@@ -24,6 +24,7 @@
 					</uni-grid-item>
 				</uni-grid>
 			</view>
+			<button type="primary" @tap="testQiniuUpload">123</button>
 		</view>
 	</view>
 </template>
@@ -32,6 +33,7 @@
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import clouds from '@/pages/index/cloud.vue'
+	import Qiniu from '@/common/upload.js'
 	export default {
 		components: {
 			uniGrid,
@@ -58,6 +60,11 @@
 						text: '天气',
 						image: '/static/weather.png',
 						backgroundImage: ''
+					}, {
+						path: '/pages/turntable/turntable',
+						text: '天气',
+						image: '/static/weather.png',
+						backgroundImage: ''
 					}]
 				}]
 			}
@@ -75,6 +82,48 @@
 						url: path
 					})
 				}
+			},
+			testQiniuUpload() {
+				const vx = this
+				uni.chooseImage({
+					count:1,
+					sizeType: ['compressed'],
+					success(res) {
+						Qiniu.upload(res.tempFilePaths[0], (res) => {
+							vx.$gd.uniRequest({
+								url: 'cornucopia/ocr/photo',
+								isGet: false,
+								notAuth: true,
+								data: {
+									imgUrl: res.imageURL,
+									type: 'idcard'
+								}
+							}).then(res => {
+								if (res.data.errmsg === 'ok') {
+									
+								} else {
+									vx.$gd.uniToast({
+										title: res.data.errmsg
+									})
+								}
+							})
+						}, (err) => {
+							vx.$gd.uniToast({
+								title: err.errmsg || '上传失败，请稍后再试'
+							})
+						}, {
+							region: 'NCN',
+							domain: 'https://ifile.zhangjiale.club',
+							uptokenURL: 'cornucopia/uploadToken'
+						}, () => {
+							// 取消上传
+						}, () => {
+							// `before` 上传前执行的操作
+						}, (err) => {
+							// `complete` 上传接受后执行的操作(无论成功还是失败都执行)
+						})
+					}
+				})
 			},
 			testOcr() {
 				const vx = this
