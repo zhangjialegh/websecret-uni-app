@@ -57,6 +57,15 @@
 		onLoad() {
 			this.getAllCategory()
 		},
+		// #ifndef H5
+		onShareAppMessage() {
+			return {
+				title: '生活不易，我选青云器',
+				desc: '一切为了你生活的小便捷和小乐趣',
+				path: '/pages/index/index'
+			}
+		},
+		// #endif
 		methods: {
 			navigate(e) {
 				const {

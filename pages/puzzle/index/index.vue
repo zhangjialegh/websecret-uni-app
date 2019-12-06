@@ -97,6 +97,15 @@
 				checkAddFont: false
 			};
 		},
+		// #ifndef H5
+		onShareAppMessage() {
+			return {
+				title: '拼图小工具',
+				desc: '无聊的生活中制造点小乐趣',
+				path: '/pages/puzzle/index/index'
+			}
+		},
+		// #endif
 		onLoad() {
 			let system = null
 			if (this.$store.state.system) {

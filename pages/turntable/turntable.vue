@@ -214,11 +214,22 @@
 					ctx.arc(0, 0, 150, 0, 2 * Math.PI / num, false);
 
 					// 颜色间隔
-					if (i % 2 == 0) {
-						ctx.setFillStyle('#ffb820');
+					if (num % 2 === 0) {
+						if (i % 2 == 0) {
+							ctx.setFillStyle('#ffb820');
+						} else {
+							ctx.setFillStyle('#ffcb3f');
+						}
 					} else {
-						ctx.setFillStyle('#ffcb3f');
+						if (i % 3 == 1) {
+							ctx.setFillStyle('#ffb820');
+						} else if (i % 3 == 2) {
+							ctx.setFillStyle('#ffcb3f');
+						} else {
+							ctx.setFillStyle('#fac126')
+						}
 					}
+					
 
 					// 填充扇形
 					ctx.fill();

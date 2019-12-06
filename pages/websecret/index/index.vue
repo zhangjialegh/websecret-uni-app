@@ -74,7 +74,7 @@
 			return {
 				title: '网密--网站密码生成小工具',
 				desc: '网络账号存储，密码前端生成，无后台存储，更加安全',
-				path: '/pages/index/index'
+				path: '/pages/websecret/index/index'
 			}
 		},
 		// #endif
