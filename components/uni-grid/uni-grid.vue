@@ -1,122 +1,128 @@
 <template>
-	<view class="uni-grid-wrap">
-		<view :id="elId" ref="uni-grid" class="uni-grid" :class="{ 'uni-grid--border': showBorder }" :style="{ 'border-left-style':'solid','border-left-color':borderColor, 'border-left-width':0 }">
-			<slot />
+	<view class="sw-grid-wrap">
+		<view class="grid-wrap" v-for="(list, i) in gridList" :key="i">
+			<view class="grid-title">{{list.title}}</view>
+			<view class="grid-item-box">
+				<view class="grid-item" v-for="(item, index) in list.lists" :key="index" hover-class="hover" :style="'width:calc(100% / '+column+')'"
+				 :class="{'no-border-right':(index+1)%column==0,'no-border-top':index+1>column, 'no-border-bottom':noBorderBottom(i,index), 'no-border':!border}"
+				 @tap="jump(item.path, index, item)">
+					<image :src="item.image"></image>
+					<view class="name">{{item.text}}</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	// #ifdef APP-NVUE
-	const dom = uni.requireNativePlugin('dom');
-	// #endif
 	export default {
-		name: 'UniGrid',
 		props: {
-			// 每列显示个数
+			gridList: {
+				type: Array
+			},
 			column: {
 				type: Number,
 				default: 3
 			},
-			// 是否显示边框
-			showBorder: {
+			border: {
 				type: Boolean,
 				default: true
-			},
-			// 边框颜色
-			borderColor: {
-				type: String,
-				default: '#e5e5e5'
-			},
-			// 是否正方形显示,默认为 true
-			square: {
-				type: Boolean,
-				default: true
-			},
-			highlight: {
-				type: Boolean,
-				default: true
-			}
-		},
-		provide() {
-			return {
-				grid: this
 			}
 		},
 		data() {
-			const elId = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
-			return {
-				index: 0,
-				elId,
-				width: 0
-			}
-		},
-		created() {
-			this.children = []
-			this.index = 0
-		},
-		mounted() {
-			this.init()
+			return {}
 		},
 		methods: {
-			init() {
-				setTimeout(() => {
-					this._getSize((width) => {
-						this.children.forEach((item, index) => {
-							item.width = width
-						})
-					})
-				}, 50)
+			//最后一行-取消底部边框
+			noBorderBottom(i, index) {
+				let len = this.gridList[i].lists.length
+				let row = parseInt(len / this.column)
+				if (len % this.column === 0) {
+					return index + 1 > (row - 1) * this.column
+				}
+				return index + 1 > row * this.column
 			},
-			change(e) {
-				this.$emit('change', e)
-			},
-			_getSize(fn) {
-				// #ifndef APP-NVUE
-				uni.createSelectorQuery()
-					.in(this)
-					.select(`#${this.elId}`)
-					.boundingClientRect()
-					.exec(ret => {
-						this.width = parseInt(ret[0].width / this.column) + 'px'
-						fn(this.width)
-					})
-				// #endif
-				// #ifdef APP-NVUE
-				dom.getComponentRect(this.$refs['uni-grid'], (ret) => {
-					this.width = parseInt(ret.size.width / this.column) + 'px'
-					fn(this.width)
+			//跳转
+			jump(url, index, item) {
+				//如果是点击类型的，那么就直接返回当前点击的数据以及索引回去
+				if (item.type === 'click') {
+					const obj = {
+						item,
+						index
+					}
+					this.$emit('tapGrid', obj)
+					return
+				}
+				uni.navigateTo({
+					url
 				})
-				// #endif
 			}
 		}
-	}
+
+	};
 </script>
 
-<style lang="scss" scoped>
-	.uni-grid-wrap {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex: 1;
-		flex-direction: column;
-		/* #ifdef H5 */
-		width: 100%;
-		/* #endif */
-	}
+<style scoped lang="scss">
+	.grid-wrap {
+		width: 96%;
+		margin-left: 2%;
+		background-color: rgba(255, 255, 255, 0.7);
+		border-radius: 20upx;
+		// box-shadow: 0 0 5upx 2upx #efefef;
+		margin-top: 15upx;
+		font-size: 28upx;
 
-	.uni-grid {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		flex: 1;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
+		.grid-title {
+			padding: 30rpx;
+			color: #4a4a4a;
+			font-size: 32rpx;
+		}
 
-	.uni-grid--border {
-		border-left-color: $uni-border-color;
-		border-left-style: solid;
-		border-left-width: 1px;
+		.grid-item-box {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+
+			.grid-item {
+				text-align: center;
+				padding: 35upx 0;
+				width: calc(100% / 3);
+				box-sizing: border-box;
+				border-right: .5upx solid #eaeaea;
+				border-top: .5upx solid #eaeaea;
+				border-bottom: .5upx solid #eaeaea;
+
+				image {
+					width: 50rpx;
+					height: 50rpx;
+				}
+
+				.name {
+					font-size: 24rpx;
+					margin-top: 15rpx;
+					color: #4a4a4a;
+				}
+			}
+
+			.hover {
+				background: #efefef;
+			}
+
+			.no-border-right {
+				border-right: none;
+			}
+
+			.no-border-bottom {
+				border-bottom: none
+			}
+
+			.no-border-top {
+				border-top: none
+			}
+
+			.no-border {
+				border: none !important
+			}
+		}
 	}
 </style>

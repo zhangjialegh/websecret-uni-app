@@ -7,38 +7,19 @@
 			<!-- <view class="header ware">
 
 			</view> -->
-			<view class="body ware" v-for="grid in gridsData" :key="grid.title">
-				<view class="title">
-					{{grid.title}}
-				</view>
-				<uni-grid :column="3">
-					<uni-grid-item v-for="item in grid.lists" :key="item.path">
-						<view :data-path="item.path" class="grid-item-box" :style="{backgroundImage: item.backgroundImage}" @tap="navigate">
-							<view class="grid-item-image">
-								<image :src="item.image" mode="aspectFit"></image>
-							</view>
-							<view class="text" v-if="item.text">
-								{{item.text}}
-							</view>
-						</view>
-					</uni-grid-item>
-				</uni-grid>
-			</view>
-			<button type="primary" @tap="testQiniuUpload">123</button>
+			<uni-grid :gridList="gridsData" column="3"></uni-grid>
 		</view>
 	</view>
 </template>
 
 <script>
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
-	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import clouds from '@/pages/index/cloud.vue'
 	import Qiniu from '@/common/upload.js'
 	export default {
 		components: {
-			uniGrid,
-			uniGridItem,
-			clouds
+			clouds,
+			uniGrid
 		},
 		data() {
 			return {
@@ -60,12 +41,16 @@
 						text: '天气',
 						image: '/static/weather.png',
 						backgroundImage: ''
-					}, {
-						path: '/pages/turntable/turntable',
-						text: '天气',
-						image: '/static/weather.png',
-						backgroundImage: ''
 					}]
+				}, {
+				  title: '生活趣味',
+				  id: 2,
+				  lists: [{
+				  	path: '/pages/turntable/turntable',
+				  	text: '决与择',
+				  	image: '/static/turntable.png',
+				  	backgroundImage: ''
+				  }]
 				}]
 			}
 		},

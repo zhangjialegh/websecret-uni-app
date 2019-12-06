@@ -31,12 +31,13 @@ export default {
 	},
 	mounted() {
 		let { windowWidth } = uni.getSystemInfoSync()
+		const winWidth = windowWidth || 375
 		let viewWidth = windowWidth || 375
 		this.options.forEach(item => {
 			viewWidth += (item.width === 'max' ? 100 : 80)
 		})
 		this.viewWidth = viewWidth
-		this.deleteBtnWidth = ((windowWidth || 375) / 375) * (viewWidth - (windowWidth || 375))
+		this.deleteBtnWidth = (winWidth / 375) * (viewWidth - winWidth)
 	},
 	methods: {
 		/**
@@ -105,8 +106,12 @@ export default {
 		background: #cfcfcf;
 		font-size: 34rpx;
 		color: #ffffff;
+		background-color: rgb(0, 122, 255);
 		&.warn {
 			background: red;
+		}
+		&.disable {
+			background-color: #cfcfcf;
 		}
 		text {
 			position: absolute;

@@ -54,3 +54,6 @@ button[plain] {
 .button-hover-class {
   background: rgb(233, 233, 233) !important;
 }
+.deep-hover-clase {
+  opacity: 0.8;
+}

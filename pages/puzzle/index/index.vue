@@ -57,7 +57,7 @@
 						<view class="color" :style="{background: color}"></view>
 					</view>
 					<view class="size-box">
-						<slider :max="24" :min="12" :step="1" :value="size" :block-size="16" :show-value="true" @change="handleSlider"/>
+						<slider :max="40" :min="12" :step="1" :value="size" :block-size="16" :show-value="true" @change="handleSlider"/>
 					</view>
 					<view class="btn-box">
 						<button plain class="popup-btn" @tap="handleTextSure">确定</button>
