@@ -1,5 +1,5 @@
 <template>
-	<view class="picachu-container">
+	<view class="picachu-container" :style="{height:h+'px',width:w+'px',transform:'scale('+scale+')'}">
 	    <view class="moon">
 	      <view class="crater"></view>
 	      <view class="crater"></view>
@@ -85,7 +85,21 @@
 
 <script>
 	export default {
-		name: 'pikachu'
+		name: 'pikachu',
+		data() {
+			return {
+				h: 672,
+				w: 375,
+				scale: 1
+			}
+		},
+		mounted() {
+			let { windowWidth, windowHeight } = uni.getSystemInfoSync()
+			const winWidth = windowWidth || 375
+			const winHeight = windowHeight || 672
+			this.h = winHeight
+			this.w = winWidth
+		}
 	}
 </script>
 
@@ -94,13 +108,8 @@
   background-image: linear-gradient(to top, #fcf3d8 30%, #eaafc8, #654ea3);
   background-image: -webkit-linear-gradient(to bottom, #fcf3d8 30%, #eaafc8, #654ea3);
   background-color: #654ea3;
-  height: 450px;
-  width: 450px;
-  border-radius: 100%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
+  /* border-radius: 100%; */
+  position: relative;
   overflow: hidden;
 }
 

@@ -90,6 +90,10 @@
 				"backgroundColor": "#E44025"
 			}
         }
+        ,{
+            "path" : "pages/scan/scan",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

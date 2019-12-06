@@ -15,7 +15,6 @@
 <script>
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import clouds from '@/pages/index/cloud.vue'
-	import Qiniu from '@/common/upload.js'
 	export default {
 		components: {
 			clouds,
@@ -40,6 +39,11 @@
 						path: '/pages/weather/weather',
 						text: '天气',
 						image: '/static/weather.png',
+						backgroundImage: ''
+					}, {
+						path: '/pages/scan/scan',
+						text: '扫描',
+						image: '/static/ocr.png',
 						backgroundImage: ''
 					}]
 				}, {
@@ -77,53 +81,12 @@
 					})
 				}
 			},
-			testQiniuUpload() {
-				const vx = this
-				uni.chooseImage({
-					count:1,
-					sizeType: ['compressed'],
-					success(res) {
-						Qiniu.upload(res.tempFilePaths[0], (res) => {
-							vx.$gd.uniRequest({
-								url: 'cornucopia/ocr/photo',
-								isGet: false,
-								notAuth: true,
-								data: {
-									imgUrl: res.imageURL,
-									type: 'idcard'
-								}
-							}).then(res => {
-								if (res.data.errmsg === 'ok') {
-									
-								} else {
-									vx.$gd.uniToast({
-										title: res.data.errmsg
-									})
-								}
-							})
-						}, (err) => {
-							vx.$gd.uniToast({
-								title: err.errmsg || '上传失败，请稍后再试'
-							})
-						}, {
-							region: 'NCN',
-							domain: 'https://ifile.zhangjiale.club',
-							uptokenURL: 'cornucopia/uploadToken'
-						}, () => {
-							// 取消上传
-						}, () => {
-							// `before` 上传前执行的操作
-						}, (err) => {
-							// `complete` 上传接受后执行的操作(无论成功还是失败都执行)
-						})
-					}
-				})
-			},
 			testOcr() {
 				const vx = this
 				uni.chooseImage({
 					count:1,
 					sizeType: ['compressed'],
+					sourceType: ['album', 'camera'],
 					success(res) {
 						const File = uni.getFileSystemManager()
 						File.readFile({
