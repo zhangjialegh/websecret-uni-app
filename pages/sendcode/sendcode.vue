@@ -49,19 +49,34 @@
 						icon: 'none'
 					})
 				} else {
-					this.$gd.uniRequest({
-						url: 'mail/send',
-						isGet: false,
-						notAuth: true,
-						data: {
-							email: this.email
-						}
-					}).then(res => {
-						if (res.success) {
-							uni.navigateTo({
-								url: '/pages/checkcode/checkcode?email='+ this.email
-							})
-						}
+					this.$gd.uniRegist()
+					.then(res => {
+						this.$gd.uniRequest({
+							url: 'mail/send',
+							isGet: false,
+							notAuth: true,
+							data: {
+								email: this.email,
+								ucode: res.code,
+								type: res.type
+							}
+						}).then(res => {
+							if (res.success) {
+								if (res.data && res.data.id) {
+									vx.$gd.loginSuccess(res.data)
+									vx.$gd.uniToast({
+										title: '登录成功'
+									})
+									uni.reLaunch({
+										url: '/pages/index/index'
+									})
+								} else {
+									uni.navigateTo({
+										url: '/pages/checkcode/checkcode?email='+ vx.email
+									})
+								}
+							}
+						})
 					})
 				}
 			}
