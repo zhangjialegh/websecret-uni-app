@@ -7,7 +7,7 @@
 			<!-- <view class="header ware">
 
 			</view> -->
-			<uni-grid :gridList="gridsData" column="3"></uni-grid>
+			<uni-grid :gridList="gridsData" :column="3"></uni-grid>
 		</view>
 	</view>
 </template>

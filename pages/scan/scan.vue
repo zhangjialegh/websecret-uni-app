@@ -167,7 +167,8 @@
 						}, {
 							region: 'NCN',
 							domain: 'https://ifile.zhangjiale.club',
-							uptokenURL: 'cornucopia/uploadToken'
+							uptokenURL: 'cornucopia/uploadToken',
+							key: 'scan'
 						}, () => {
 							// 取消上传
 						}, () => {

@@ -83,7 +83,7 @@ function doUpload(filePath, success, fail, options, progress, cancelTask, before
     var url = uploadURLFromRegionCode(config.qiniuRegion);
     var fileName = filePath.split('//')[1];
     if (options && options.key) {
-        fileName = options.key;
+        fileName = options.key + '/' + fileName;
     }
     var formData = {
         'token': config.qiniuUploadToken

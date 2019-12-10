@@ -75,14 +75,6 @@
             "style" : {}
         }
         ,{
-            "path" : "pages/2048/2048",
-            "style" : {
-				"navigationBarTitleText": "2048",
-				"navigationBarBackgroundColor": "#776e65",
-				"backgroundColor": "#776e65"
-			}
-        }
-        ,{
             "path" : "pages/turntable/turntable",
             "style" : {
 				"navigationBarTitleText": "决与择",
@@ -92,7 +84,9 @@
         }
         ,{
             "path" : "pages/scan/scan",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "扫码与识别"
+			}
         }
     ],
 	"globalStyle": {
