@@ -157,7 +157,6 @@
 		methods: {
 			init() {
 				const vx = this;
-				// #ifndef H5
 				uni.getLocation({
 					type: 'wgs84',
 					success: function(res) {
@@ -168,14 +167,11 @@
 					},
 					fail: function (err) {
 						console.log(err)
+						// #ifdef H5
+						vx.getWeatherInfo('朝阳区')
+						// #endif
 					}
 				})
-				// #endif
-				
-				// #ifdef H5
-				vx.getWeatherInfo('朝阳区')
-				// #endif
-				
 			},
 			getWeatherInfo: function(location) {
 				const vx = this
