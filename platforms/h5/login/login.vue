@@ -20,7 +20,7 @@
 
 			<view class='qrcode-box'>
 				<text>扫描小程序，获取登录码</text>
-				<image @tap="previewImage" mode="aspectFit" src='/static/websecret.png'></image>
+				<image @tap="previewImage" mode="aspectFit" src='/static/code.jpg'></image>
 			</view>
 		</view>
 	</view>
@@ -85,7 +85,7 @@
 			},
 			previewImage() {
 				uni.previewImage({
-					urls: ['/static/websecret.png'],
+					urls: ['/static/code.jpg'],
 					longPressActions: {
 						itemList: ['保存图片'],
 						success: function(data) {
